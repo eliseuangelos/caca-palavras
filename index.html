@@ -5,9 +5,11 @@
   <meta name="google-site-verification" content="7uBMpQdMikUwnbO_WabTQvwaZ6aXgKW0TBJFwNi6K54" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerador de Caça-Palavras</title>
+  
+  <!-- Biblioteca para geração do PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
-    /* === STREAMING_CHUNK:Configuring CSS Variables and Reset === */
-    /* Define as variáveis de cores e configurações globais (tema do jogo) */
     :root {
       --primary-color: #7c2d12;
       --primary-light: #9a3412;
@@ -22,16 +24,13 @@
       --error-color: #dc2626;
     }
 
-    /* Reset global de margens e padding para garantir consistência visual em todos os navegadores */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
-    /* === STREAMING_CHUNK:Styling Body and Header === */
-    /* Estilização do corpo da página, centralizando o conteúdo */
     body {
       background-color: var(--bg-color);
       color: var(--text-color);
@@ -46,13 +45,11 @@
       text-align: center;
       margin-bottom: 1.5rem;
     }
-
     header h1 {
       color: var(--primary-color);
       font-size: 2rem;
       margin-bottom: 0.25rem;
     }
-
     header p {
       color: #64748b;
       font-size: 1rem;
@@ -69,8 +66,6 @@
       display: none !important;
     }
 
-    /* === STREAMING_CHUNK:Styling Setup Screen Form === */
-    /* Estilos do cartão de configuração (onde o usuário insere as palavras e título do jogo) */
     .setup-card {
       background: var(--card-bg);
       padding: 2rem;
@@ -79,17 +74,46 @@
       width: 100%;
       max-width: 700px;
     }
-
     .setup-card h2 {
       color: var(--primary-color);
       margin-bottom: 0.5rem;
       text-align: center;
     }
-
     .setup-card > p {
       text-align: center;
       color: #64748b;
       margin-bottom: 1.5rem;
+    }
+
+    .mode-switcher {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.85rem 1rem;
+      border: 2px solid #cbd5e1;
+      background: white;
+      color: #64748b;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .mode-btn:hover { background: #f8fafc; }
+    .mode-btn.active {
+      border-color: var(--primary-color);
+      background: var(--bg-color);
+      color: var(--primary-color);
     }
 
     .error-msg {
@@ -102,46 +126,39 @@
       font-weight: 600;
       border: 1px solid #f87171;
     }
-
     .setup-form-group {
       margin-bottom: 1.25rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
-
     .setup-form-group label {
       font-weight: 600;
       font-size: 0.9rem;
       color: var(--primary-color);
     }
-
     .setup-form-group input,
     .setup-form-group select {
       padding: 0.75rem;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       font-size: 1rem;
-      transition: all 0.2s;
       background-color: white;
+      transition: all 0.2s;
     }
-
     .setup-form-group input:focus,
     .setup-form-group select:focus {
       outline: none;
       border-color: var(--accent-color);
       box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
     }
-
     .setup-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      margin-bottom: 1.5rem;
     }
+    .mb-6 { margin-bottom: 1.5rem; }
 
-    /* === STREAMING_CHUNK:Styling Game Layout and Canvas === */
-    /* Layout principal do jogo (quadro do lado esquerdo, painel lateral do lado direito) */
     .game-layout {
       display: flex;
       flex-direction: row;
@@ -151,17 +168,15 @@
       align-items: flex-start;
       width: 100%;
     }
-
     .game-board-container {
       background: var(--card-bg);
       padding: 1rem;
       border-radius: var(--border-radius);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       position: relative;
       user-select: none;
       touch-action: none;
     }
-
     .canvas-wrapper {
       position: relative;
       width: 500px;
@@ -169,22 +184,15 @@
       max-width: 85vw;
       max-height: 85vw;
     }
-
     .canvas-wrapper canvas {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       border-radius: 8px;
     }
-
-    #grid-canvas { z-index: 10; }
-    #lines-canvas { z-index: 20; pointer-events: none; }
+    #lines-canvas { z-index: 10; pointer-events: none; }
+    #grid-canvas { z-index: 20; pointer-events: none; }
     #drag-canvas { z-index: 30; pointer-events: none; }
 
-    /* === STREAMING_CHUNK:Styling Sidebar, Status and Buttons === */
-    /* Estilos da barra lateral que contém o cronômetro, controles e a lista de palavras */
     .sidebar {
       display: flex;
       flex-direction: column;
@@ -192,276 +200,176 @@
       width: 320px;
       max-width: 100%;
     }
-
     .card {
       background: var(--card-bg);
       padding: 1.25rem;
       border-radius: var(--border-radius);
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
-
     .status-panel {
       display: flex;
-      justify-content: center; /* Centered since score is removed */
+      justify-content: center;
       align-items: center;
       margin-bottom: 1rem;
     }
+    .status-item { text-align: center; }
+    .status-label { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 600; }
+    .status-value { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); }
 
-    .status-item {
-      text-align: center;
-    }
-
-    .status-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      color: #64748b;
-      font-weight: 600;
-    }
-
-    .status-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--primary-color);
-    }
-
-    .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 0.5rem;
-    }
-
+    .actions { display: flex; flex-direction: column; gap: 0.5rem; }
+    .btn-row { display: flex; gap: 0.5rem; }
     button {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 0.95rem;
+      flex: 1; padding: 0.75rem 1rem; border: none;
+      border-radius: 6px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s ease; font-size: 0.95rem;
     }
+    .btn-primary { background-color: var(--primary-color); color: white; }
+    .btn-primary:hover { background-color: var(--primary-light); }
+    .btn-secondary { background-color: var(--accent-color); color: white; }
+    .btn-secondary:hover { filter: brightness(0.9); }
+    .btn-outline { background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
+    .btn-outline:hover { background-color: #fffbeb; }
+    .w-full { width: 100%; }
 
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background-color: var(--primary-light);
-    }
-
-    .btn-secondary {
-      background-color: var(--accent-color);
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      filter: brightness(0.9);
-    }
-    
-    .btn-outline {
-      background-color: transparent;
-      border: 2px solid var(--primary-color);
-      color: var(--primary-color);
-    }
-    
-    .btn-outline:hover {
-      background-color: #fffbeb;
-    }
-
-    /* Classe utilitária para preencher 100% da largura do contêiner */
-    .w-full {
-      width: 100%;
-    }
-
-    /* === STREAMING_CHUNK:Styling Word List Card === */
-    /* Estilos da lista visual de palavras que precisam ser encontradas */
     .word-list-card h2 {
-      font-size: 1.1rem;
-      margin-bottom: 0.75rem;
-      color: var(--primary-color);
-      border-bottom: 2px solid var(--bg-color);
-      padding-bottom: 0.5rem;
+      font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--primary-color);
+      border-bottom: 2px solid var(--bg-color); padding-bottom: 0.5rem;
     }
-
     .word-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
-      list-style: none;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; list-style: none;
     }
-
     .word-item {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #475569;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      transition: all 0.3s ease;
+      font-size: 0.95rem; font-weight: 600; color: #475569;
+      padding: 0.25rem 0.5rem; border-radius: 4px; transition: all 0.3s ease;
     }
-
     .word-item.found {
-      color: var(--found-color);
-      text-decoration: line-through;
-      background-color: #dcfce7;
+      color: var(--found-color); text-decoration: line-through; background-color: #dcfce7;
     }
 
-    /* === STREAMING_CHUNK:Styling Modal Dialog === */
-    /* Estilos da janela modal (tela de vitória) que aparece ao final do jogo */
     .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center;
+      z-index: 1000; padding: 1rem;
     }
-
-    .modal.active {
-      display: flex;
-    }
-
+    .modal.active { display: flex; }
     .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      text-align: center;
-      max-width: 400px;
-      width: 100%;
+      background: white; padding: 2rem; border-radius: var(--border-radius);
+      text-align: center; max-width: 400px; width: 100%;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     }
+    .modal-content h2 { color: var(--primary-color); font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .modal-content p { margin-bottom: 1.5rem; color: #475569; }
 
-    .modal-content h2 {
-      color: var(--primary-color);
-      font-size: 1.75rem;
-      margin-bottom: 0.5rem;
-    }
+    footer { margin-top: auto; padding: 1.5rem 0 0.5rem 0; text-align: center; font-size: 0.85rem; color: #78350f; font-weight: 500; }
 
-    .modal-content p {
-      margin-bottom: 1.5rem;
-      color: #475569;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 1.5rem 0 0.5rem 0;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #78350f;
-    }
-
-    /* === STREAMING_CHUNK:Styling Responsive Media Queries === */
-    /* Ajustes de layout para adaptação a telas menores (smartphones e tablets) */
+    /* Responsividade */
     @media (max-width: 768px) {
-      .setup-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .game-layout {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .sidebar {
-        width: 100%;
-        max-width: 500px;
-      }
-      
+      .setup-grid { grid-template-columns: 1fr; }
+      .game-layout { flex-direction: column; align-items: center; }
+      .sidebar { width: 100%; max-width: 500px; }
       .sidebar > div:first-child { order: 2; }
       .sidebar > .word-list-card { order: 1; }
     }
 
-    /* === STREAMING_CHUNK:Styling Print Media Rules === */
-    /* Regras específicas que entram em ação quando o usuário tenta imprimir a página */
     @media print {
+      @page { margin: 1cm; }
       body, html { background: transparent !important; color: #000 !important; }
       .game-board-container, .card, .setup-card, .modal { background: transparent !important; box-shadow: none !important; border: none !important; }
-      .status-panel, .actions, .modal, button, #setup-screen { display: none !important; }
+      .status-panel, .actions, .modal, button, #setup-screen, .mode-switcher { display: none !important; }
+      
       .game-layout { flex-direction: column !important; align-items: center !important; display: flex !important; }
       .game-board-container { margin-bottom: 2rem !important; }
       .sidebar { width: 100% !important; max-width: 100% !important; display: block !important; }
+      
       .word-list { grid-template-columns: repeat(4, 1fr) !important; gap: 0.5rem !important; text-align: center; }
       header h1, header p, footer p, .word-item { color: #000 !important; }
       .word-list-card h2 { border-bottom: 1px solid #000 !important; }
       .print-hidden { display: none !important; }
-      .word-item.found { background-color: transparent !important; color: #000 !important; }
+      
+      /* Tratamento Específico para Impressão Normal */
+      body.print-normal #lines-canvas { display: none !important; }
+      body.print-normal .word-item { text-decoration: none !important; background-color: transparent !important; color: #000 !important; }
+      
+      /* Tratamento Específico para Impressão Gabarito */
+      body.print-answer #lines-canvas { display: block !important; }
+      body.print-answer .word-item { background-color: transparent !important; color: #000 !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- === STREAMING_CHUNK:Rendering Header === -->
-  <!-- Cabeçalho principal da página -->
   <header>
     <h1 id="header-title">Gerador de Caça-Palavras</h1>
-    <p id="header-desc">Crie seu jogo personalizado e divirta-se!</p>
+    <p id="header-desc">Preencha os campos abaixo para gerar seu próprio caça-palavras. Ou utilize o "Gerador Automático por Tema".</p>
   </header>
 
   <main>
-    <!-- === STREAMING_CHUNK:Rendering Setup Form Screen === -->
-    <!-- Tela de configuração inicial para preenchimento de palavras -->
     <section id="setup-screen" class="setup-card">
-      <h2>Criar Novo Jogo</h2>
-      <p>Preencha os campos abaixo para gerar seu próprio caça-palavras.</p>
-
-      <!-- Mensagem de erro que aparece caso o usuário digite poucas palavras -->
-      <div id="setup-error" class="error-msg hidden">
-        Insira pelo menos 3 palavras para gerar o jogo.
+      <div class="mode-switcher">
+        <button id="btn-mode-manual" class="mode-btn active" aria-label="Ativar Gerador Manual">✏️ Gerador Manual</button>
+        <button id="btn-mode-auto" class="mode-btn" aria-label="Ativar Gerador Automático">🎲 Gerador Automático</button>
       </div>
 
-      <div class="setup-form-group">
-        <label for="game-title">Título Principal</label>
-        <input type="text" id="game-title" placeholder="Ex: Virtudes e valores humanos" maxlength="40">
-      </div>
+      <div id="setup-error" class="error-msg hidden"></div>
 
-      <div class="setup-form-group">
-        <label for="game-subtitle">Subtítulo ou Dica</label>
-        <input type="text" id="game-subtitle" placeholder="Ex: Encontre as palavras escondidas" maxlength="60">
+      <div id="title-fields">
+        <div class="setup-form-group">
+          <label for="game-title">Título Principal</label>
+          <input type="text" id="game-title" placeholder="Ex: Meu Caça-Palavras" maxlength="40">
+        </div>
+        <div class="setup-form-group">
+          <label for="game-subtitle">Subtítulo ou Dica</label>
+          <input type="text" id="game-subtitle" placeholder="Ex: Encontre as palavras escondidas" maxlength="60">
+        </div>
       </div>
-
-      <!-- Nova opção para escolher o tamanho do quadro -->
-      <div class="setup-form-group">
-        <label for="grid-size">Tamanho do Quadro:</label>
+      
+      <div class="setup-form-group mb-6">
+        <label for="grid-size">Tamanho do Quadro</label>
         <select id="grid-size">
-          <option value="10">10x10 (Fácil)</option>
-          <option value="15" selected>15x15 (Médio)</option>
-          <option value="20">20x20 (Difícil)</option>
+          <option value="10">10x10 (Pequeno - Palavras até 10 letras)</option>
+          <option value="15" selected>15x15 (Médio - Palavras até 15 letras)</option>
+          <option value="20">20x20 (Grande - Palavras até 20 letras)</option>
         </select>
       </div>
 
-      <div class="setup-form-group">
-        <label>Palavras</label>
-        <div class="setup-grid">
-          <!-- Campos de entrada para as palavras do jogo pré-preenchidos, com maxlength ajustado para 18 -->
-          <input type="text" id="word-1" placeholder="Palavra 1" maxlength="18" value="Bondade">
-          <input type="text" id="word-2" placeholder="Palavra 2" maxlength="18" value="Fidelidade">
-          <input type="text" id="word-3" placeholder="Palavra 3" maxlength="18" value="Amor">
-          <input type="text" id="word-4" placeholder="Palavra 4" maxlength="18" value="Alegria">
-          <input type="text" id="word-5" placeholder="Palavra 5" maxlength="18" value="Respeito">
-          <input type="text" id="word-6" placeholder="Palavra 6" maxlength="18" value="Sabedoria">
-          <input type="text" id="word-7" placeholder="Palavra 7" maxlength="18" value="Coragem">
-          <input type="text" id="word-8" placeholder="Palavra 8" maxlength="18" value="Pureza">
-          <input type="text" id="word-9" placeholder="Palavra 9" maxlength="18" value="Esperança">
-          <input type="text" id="word-10" placeholder="Palavra 10" maxlength="18" value="Humildade">
+      <div id="auto-fields" class="hidden">
+        <div class="setup-grid mb-6">
+          <div class="setup-form-group">
+            <label for="auto-theme">Tema</label>
+            <select id="auto-theme">
+              <option value="">Selecione um tema</option>
+            </select>
+          </div>
+          <div class="setup-form-group">
+            <label for="auto-quantity">Quantidade de palavras</label>
+            <select id="auto-quantity"></select>
+          </div>
         </div>
       </div>
 
-      <!-- Botão para gerar a grade do jogo -->
+      <div id="manual-fields">
+        <div class="setup-form-group mb-6">
+          <label>Palavras (Insira no mínimo 3 palavras)</label>
+          <div class="setup-grid">
+            <input type="text" id="word-1" placeholder="Palavra 1" maxlength="20">
+            <input type="text" id="word-2" placeholder="Palavra 2" maxlength="20">
+            <input type="text" id="word-3" placeholder="Palavra 3" maxlength="20">
+            <input type="text" id="word-4" placeholder="Palavra 4" maxlength="20">
+            <input type="text" id="word-5" placeholder="Palavra 5" maxlength="20">
+            <input type="text" id="word-6" placeholder="Palavra 6" maxlength="20">
+            <input type="text" id="word-7" placeholder="Palavra 7" maxlength="20">
+            <input type="text" id="word-8" placeholder="Palavra 8" maxlength="20">
+            <input type="text" id="word-9" placeholder="Palavra 9" maxlength="20">
+            <input type="text" id="word-10" placeholder="Palavra 10" maxlength="20">
+          </div>
+        </div>
+      </div>
+
       <button id="btn-generate" class="btn-primary w-full">Gerar Caça-Palavras</button>
     </section>
 
-    <!-- === STREAMING_CHUNK:Rendering Active Game Screen === -->
-    <!-- Contêiner principal do jogo ativo, escondido inicialmente -->
     <div id="game-screen" class="game-layout hidden">
-      <!-- Área dos painéis de desenho (Canvas) para as letras e interação -->
-      <section class="game-board-container">
+      <section class="game-board-container" aria-label="Área do Caça-Palavras">
         <div class="canvas-wrapper">
           <canvas id="grid-canvas"></canvas>
           <canvas id="lines-canvas"></canvas>
@@ -469,82 +377,87 @@
         </div>
       </section>
 
-      <!-- Barra lateral de status, controles de jogo e a lista de palavras a achar -->
       <aside class="sidebar">
         <div class="card">
           <div class="status-panel">
             <div class="status-item">
               <div class="status-label">Tempo</div>
-              <div class="status-value" id="timer">00:00</div>
+              <div class="status-value" id="timer" aria-live="polite">00:00</div>
             </div>
-            
           </div>
-
           <div class="actions">
             <div class="btn-row">
-              <button id="btn-hint" class="btn-secondary">Revelar</button>
+              <button id="btn-hint" class="btn-secondary">Revelar Palavra</button>
               <button id="btn-restart" class="btn-primary">Embaralhar</button>
             </div>
             <div class="btn-row">
               <button id="btn-print" class="btn-outline">Imprimir</button>
-              <button id="btn-edit" class="btn-outline">Editar</button>
+              <button id="btn-print-answers-inline" class="btn-outline">Imprimir Gabarito</button>
             </div>
+            <div class="btn-row">
+              <button id="btn-pdf" class="btn-outline">Salvar PDF</button>
+            </div>
+            <button id="btn-edit" class="btn-outline w-full" style="margin-top: 0.5rem;">Editar Jogo</button>
           </div>
         </div>
 
         <div class="card word-list-card">
-          <!-- Adicionada classe .print-hidden para esconder os números durante a impressão -->
           <h2>Encontrar <span class="print-hidden">(<span id="found-count">0</span>/<span id="total-count">0</span>)</span></h2>
-          <!-- Elemento lista que é populado via JavaScript dinamicamente -->
-          <ul class="word-list" id="word-list-ui"></ul>
+          <ul class="word-list" id="word-list-ui" aria-label="Lista de Palavras a Encontrar"></ul>
         </div>
       </aside>
     </div>
   </main>
 
   <footer>
-    <!-- Este texto será substituído pelo JavaScript com o link atual do site -->
     <p id="footer-watermark"></p>
   </footer>
 
-  <!-- === STREAMING_CHUNK:Rendering Win Modal Dialog === -->
-  <!-- Pop-up modal de Vitória (sobrepõe a tela ao achar todas as palavras) -->
-  <div class="modal" id="win-modal">
+  <!-- Modal de Vitória -->
+  <div class="modal" id="win-modal" aria-hidden="true">
     <div class="modal-content">
       <h2>Parabéns! 🎉</h2>
       <p>Você encontrou todas as palavras!</p>
-      
       <div class="actions" style="gap: 0.5rem;">
-        <button class="btn-primary w-full" id="btn-print-answers">Imprimir Respostas</button>
+        <button class="btn-primary w-full" id="btn-print-answers">Imprimir Gabarito</button>
+        <button class="btn-secondary w-full" id="btn-pdf-answers">Salvar PDF (Gabarito)</button>
         <div class="btn-row">
-          <button class="btn-secondary" id="btn-play-again">Jogar Novamente</button>
-          <button class="btn-outline" id="btn-new-game-modal">Novo Jogo</button>
+          <button class="btn-outline" id="btn-play-again">Embaralhar Novo</button>
+          <button class="btn-outline" id="btn-new-game-modal">Criar Novo</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // === STREAMING_CHUNK:Initializing Constants and Sanitizer ===
+    let generationMeta = { dateBR: "", dateISO: "", host: "" };
+    let printModeState = null; // 'normal' ou 'answer'
 
-    // Função que limpa as palavras: retira acentos, números, e transforma tudo em letra maiúscula
-    function sanitizeWord(word) {
-      return word
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-zA-Z]/g, "")
-        .toUpperCase();
-    }
+    const THEMES = {
+      animais: { name: "Animais", words: ["Cachorro", "Gato", "Cavalo", "Tigre", "Leão", "Urso", "Macaco", "Cobra", "Sapo", "Peixe", "Baleia", "Tubarão", "Golfinho", "Tartaruga", "Coelho", "Rato", "Pássaro", "Águia", "Coruja", "Pato", "Peru", "Porco", "Ovelha", "Cabra", "Vaca", "Galinha", "Lobo", "Raposa", "Cervo", "Girafa", "Zebra", "Elefante", "Jacaré", "Iguana", "Camaleão", "Formiga", "Abelha", "Mosca", "Aranha", "Lagosta", "Lula", "Polvo", "Onça", "Pantera", "Leopardo", "Chita", "Hiena", "Gazela", "Anta", "Capivara", "Tamanduá", "Tatu", "Lontra", "Castor", "Esquilo", "Marmota", "Guaxinim", "Gambá", "Doninha", "Furão", "Coala", "Canguru", "Panda", "Gorila", "Chimpanzé", "Babuíno", "Lêmure", "Preguiça", "Morsa", "Foca", "Narval", "Orca", "Pinguim", "Flamingo", "Pelicano", "Cegonha", "Garça", "Pavão", "Canário", "Sabiá", "Tucano", "Arara", "Papagaio", "Pica-pau", "Beija-flor", "Avestruz", "Condor", "Falcão", "Carcará", "Cisne", "Ganso", "Marreco", "Codorna", "Faisão", "Salamandra", "Lagarto", "Lagartixa", "Texugo", "Búfalo", "Bode"] },
+      geografia: { name: "Geografia", words: ["Mapa", "Globo", "País", "Estado", "Cidade", "Oceano", "Lago", "Montanha", "Vulcão", "Deserto", "Floresta", "Clima", "Relevo", "Planalto", "Planície", "Ilha", "Península", "Latitude", "Longitude", "Norte", "Leste", "Oeste", "Equador", "Trópico", "Polo", "Geleira", "Vale", "Colina", "Serra", "Cânion", "Caverna", "Delta", "Estuário", "Baía", "Golfo", "Enseada", "Praia", "Costa", "Litoral", "Fronteira", "Região", "Território", "Distrito", "Município", "Capital", "Aldeia", "Vila", "Continente", "Hemisfério", "Meridiano", "Paralelo", "Altitude", "Bússola", "Rosa", "Rota", "Estrada", "Rodovia", "Ponte", "Túnel", "Canal", "Represa", "Barragem", "Nascente", "Margem", "Bacia", "Riacho", "Córrego", "Cachoeira", "Oásis", "Duna", "Savana", "Estepe", "Tundra", "Taiga", "Pântano", "Mangue", "Recife", "Atol", "Penhasco", "Falésia", "Fiorde", "Baixada", "Chapada", "Sertão", "Caatinga", "Pampa", "Amazônia", "Cerrado", "Pantanal", "Escala", "Legenda", "Coordenada", "Paisagem", "Ribeira", "Divisa", "Outeiro", "Terreno", "Divisor", "Geodésia", "Geologia"] },
+      educacao: { name: "Educação", words: ["Escola", "Aluno", "Professor", "Ensino", "Estudo", "Livro", "Caderno", "Caneta", "Lápis", "Borracha", "Quadro", "Sala", "Prova", "Exame", "Nota", "Diploma", "Colégio", "Faculdade", "Leitura", "Escrita", "História", "Ciências", "Arte", "Música", "Recreio", "Tarefa", "Merenda", "Lancheira", "Diretoria", "Biblioteca", "Pesquisa", "Aula", "Curso", "Turma", "Classe", "Projeto", "Trabalho", "Debate", "Resumo", "Texto", "Página", "Capítulo", "Matéria", "Disciplina", "Geografia", "Biologia", "Química", "Física", "Literatura", "Gramática", "Redação", "Desenho", "Pintura", "Teatro", "Dança", "Esporte", "Oficina", "Cálculo", "Equação", "Número", "Dicionário", "Atlas", "Globo", "Mapa", "Agenda", "Mochila", "Estojo", "Régua", "Tesoura", "Cola", "Cartaz", "Papel", "Folha", "Pasta", "Arquivo", "Computador", "Teclado", "Internet", "Seminário", "Palestra", "Reunião", "Calendário", "Horário", "Intervalo", "Refeitório", "Pátio", "Ginásio", "Auditório", "Secretaria", "Direção", "Monitor", "Estágio", "Formatura", "Mentoria", "Didática", "Apostila", "Avaliação", "Formação", "Aprendiz", "Estudante"] },
+      alimentos: { name: "Alimentos", words: ["Arroz", "Feijão", "Carne", "Frango", "Peixe", "Leite", "Queijo", "Manteiga", "Bolo", "Doce", "Salgado", "Sopa", "Salada", "Macarrão", "Pizza", "Batata", "Cenoura", "Tomate", "Cebola", "Alho", "Açúcar", "Café", "Suco", "Água", "Biscoito", "Sorvete", "Iogurte", "Aveia", "Milho", "Ervilha", "Lentilha", "Grão", "Farinha", "Fubá", "Tapioca", "Cuscuz", "Quibe", "Pastel", "Torta", "Pudim", "Gelatina", "Mousse", "Brigadeiro", "Paçoca", "Pipoca", "Amendoim", "Castanha", "Amêndoa", "Avelã", "Maçã", "Banana", "Pera", "Manga", "Mamão", "Abacaxi", "Melão", "Melancia", "Morango", "Cereja", "Goiaba", "Caju", "Limão", "Laranja", "Maracujá", "Acerola", "Abacate", "Coco", "Beterraba", "Alface", "Couve", "Brócolis", "Pepino", "Abóbora", "Chuchu", "Quiabo", "Rabanete", "Berinjela", "Vagem", "Mandioca", "Inhame", "Pimenta", "Canela", "Cravo", "Orégano", "Manjericão", "Baunilha", "Farofa", "Molho", "Tempero", "Caldo", "Creme", "Requeijão", "Tofu", "Granola", "Ameixa", "Azeitona", "Pistache", "Ricota", "Bebida", "Vitamina"] },
+      esportes: { name: "Esportes", words: ["Futebol", "Vôlei", "Basquete", "Tênis", "Natação", "Corrida", "Salto", "Ginástica", "Judô", "Karatê", "Boxe", "Surfe", "Skate", "Ciclismo", "Remo", "Golfe", "Rugby", "Beisebol", "Atletismo", "Xadrez", "Dardos", "Esgrima", "Handebol", "Peteca", "Capoeira", "Arco", "Trilha", "Caminhada", "Escalada", "Patinação", "Hóquei", "Badminton", "Triatlo", "Maratona", "Canoagem", "Hipismo", "Boliche", "Sinuca", "Bilhar", "Pesca", "Mergulho", "Iatismo", "Vela", "Raquete", "Bola", "Rede", "Quadra", "Campo", "Pista", "Arena", "Time", "Equipe", "Atleta", "Treino", "Técnico", "Juiz", "Árbitro", "Ponto", "Placar", "Medalha", "Troféu", "Taça", "Campeão", "Torneio", "Jogo", "Partida", "Rodada", "Final", "Etapa", "Prova", "Largada", "Chegada", "Volta", "Tempo", "Recorde", "Marca", "Força", "Velocidade", "Equilíbrio", "Agilidade", "Precisão", "Passe", "Chute", "Saque", "Bloqueio", "Drible", "Defesa", "Ataque", "Arremesso", "Rebote", "Sprint", "Pódio", "Camisa", "Chuteira", "Capacete", "Bicicleta", "Prancha", "Apito", "Cronômetro", "Uniforme"] },
+      natureza: { name: "Natureza", words: ["Árvore", "Flor", "Folha", "Raiz", "Semente", "Grama", "Terra", "Pedra", "Areia", "Água", "Fogo", "Vento", "Chuva", "Estrela", "Nuvem", "Neve", "Gelo", "Raios", "Trovão", "Animal", "Planta", "Mato", "Campo", "Jardim", "Bosque", "Floresta", "Montanha", "Lago", "Oceano", "Praia", "Cachoeira", "Córrego", "Riacho", "Ilha", "Vulcão", "Deserto", "Vale", "Serra", "Colina", "Caverna", "Duna", "Pântano", "Mangue", "Recife", "Atol", "Cristal", "Mineral", "Rocha", "Cascalho", "Argila", "Barro", "Musgo", "Bambu", "Palmeira", "Pinheiro", "Cedro", "Jasmim", "Rosa", "Tulipa", "Orquídea", "Girassol", "Lírio", "Margarida", "Hortênsia", "Bromélia", "Cacto", "Samambaia", "Trevo", "Erva", "Baga", "Fruto", "Pétala", "Galho", "Tronco", "Caule", "Broto", "Pólen", "Néctar", "Seiva", "Floração", "Colmeia", "Ninho", "Concha", "Coral", "Maré", "Onda", "Espuma", "Brisa", "Geada", "Orvalho", "Neblina", "Aurora", "Horizonte", "Sombra", "Eclipse", "Planeta", "Carvalho", "Acácia", "Arbusto", "Salgueiro"] },
+      tecnologia: { name: "Tecnologia", words: ["Celular", "Tablet", "Internet", "Rede", "Dados", "Sistema", "Software", "Hardware", "Tela", "Teclado", "Mouse", "Cabo", "Bateria", "Câmera", "Foto", "Vídeo", "Jogo", "Site", "Código", "Programa", "Virtual", "Digital", "Robô", "Drone", "Nuvem", "Arquivo", "Link", "Senha", "Login", "Conta", "Servidor", "Banco", "Memória", "Monitor", "Impressora", "Scanner", "Fone", "Áudio", "Microfone", "Roteador", "Modem", "Antena", "Satélite", "Sensor", "Chip", "Placa", "Circuito", "Fonte", "Tecla", "Janela", "Ícone", "Menu", "Botão", "Pasta", "Documento", "Imagem", "Texto", "Navegador", "Pesquisa", "Aplicativo", "Versão", "Página", "Endereço", "Domínio", "Portal", "Blogue", "Email", "Mensagem", "Chat", "Canal", "Console", "Controle", "Joystick", "Mousepad", "Carregador", "Adaptador", "Conector", "Tomada", "Energia", "Pixel", "Lente", "Foco", "Flash", "Filtro", "Editor", "Gráfico", "Planilha", "Backup", "Download", "Upload", "Bluetooth", "WiFi", "Tecnologia", "Firewall", "Navegação", "Algoritmo", "Interface", "Plataforma", "Conexão", "Antivírus"] },
+      cotidiano: { name: "Cotidiano", words: ["Casa", "Carro", "Ônibus", "Trabalho", "Dinheiro", "Compra", "Venda", "Loja", "Mercado", "Banco", "Conta", "Relógio", "Hora", "Noite", "Semana", "Roupa", "Sapato", "Cama", "Mesa", "Cadeira", "Porta", "Janela", "Banho", "Sono", "Fome", "Sede", "Cozinha", "Quarto", "Sala", "Garagem", "Jardim", "Quintal", "Varanda", "Telhado", "Parede", "Piso", "Escada", "Chave", "Bolsa", "Carteira", "Mochila", "Toalha", "Sabonete", "Escova", "Espelho", "Prato", "Copo", "Talher", "Panela", "Fogão", "Forno", "Geladeira", "Armário", "Sofá", "Tapete", "Cortina", "Lâmpada", "Tomada", "Telefone", "Agenda", "Calendário", "Alarme", "Viagem", "Passeio", "Praça", "Parque", "Feira", "Farmácia", "Padaria", "Esquina", "Avenida", "Calçada", "Semáforo", "Bicicleta", "Moto", "Caminhão", "Táxi", "Metrô", "Trem", "Ingresso", "Cinema", "Música", "Filme", "Foto", "Festa", "Presente", "Família", "Amigo", "Vizinho", "Tarefa", "Descanso", "Rotina", "Manhã", "Tarde", "Almoço", "Jantar", "Café", "Lanche", "Receita", "Toalete"] },
+      portugues: { name: "Português", words: ["Alfabeto", "Vogal", "Consoante", "Sílaba", "Palavra", "Frase", "Texto", "Verbo", "Nome", "Adjetivo", "Pronome", "Sujeito", "Ponto", "Vírgula", "Acento", "Plural", "Singular", "Sinônimo", "Antônimo", "Rimar", "Poema", "Conto", "Letra", "Parágrafo", "Leitura", "Escrita", "Redação", "Gramática", "Ortografia", "Dicionário", "Fábula", "História", "Narrativa", "Personagem", "Título", "Autor", "Verso", "Estrofe", "Rima", "Prosa", "Diálogo", "Discurso", "Pergunta", "Resposta", "Ideia", "Tema", "Assunto", "Sentido", "Fraseado", "Símbolo", "Sinal", "Página", "Capítulo", "Livro", "Revista", "Jornal", "Carta", "Bilhete", "Aviso", "Convite", "Receita", "Notícia", "Crônica", "Biografia", "Lenda", "Mito", "Ficção", "Leitor", "Escritor", "Narrador", "Cenário", "Enredo", "Ação", "Tempo", "Lugar", "Advérbio", "Artigo", "Preposição", "Conjunção", "Numeral", "Predicado", "Objeto", "Acentuação", "Pontuação", "Caligrafia", "Expressão", "Pronúncia", "Sotaque", "Idioma", "Língua", "Português", "Fonema", "Morfema", "Sujeição", "Regência", "Semântica", "Fonologia", "Vocativo", "Prefixo", "Sufixo"] },
+      ingles: { name: "Inglês", words: ["Hello", "Goodbye", "Please", "Thanks", "Welcome", "Sorry", "Blue", "Green", "Black", "White", "House", "Book", "Water", "Food", "Time", "Night", "Friend", "Happy", "Small", "Large", "Table", "Chair", "Window", "School", "Teacher", "Student", "Family", "Mother", "Father", "Brother", "Sister", "Morning", "Evening", "Today", "Tomorrow", "Summer", "Winter", "Spring", "Autumn", "Apple", "Banana", "Orange", "Grape", "Lemon", "Peach", "Cherry", "Garden", "Flower", "Tree", "River", "Mountain", "Ocean", "Beach", "Cloud", "Rain", "Snow", "Wind", "Moon", "Star", "Music", "Movie", "Game", "Sport", "Ball", "Team", "Player", "Coach", "Goal", "Point", "Match", "Race", "Jump", "Swim", "Dance", "Read", "Write", "Speak", "Listen", "Learn", "Study", "Work", "Play", "Open", "Close", "Start", "Finish", "Kind", "Brave", "Clean", "Quiet", "Strong", "Young", "Bright", "Brown", "Purple", "Yellow", "English", "Bread", "Clock", "Phone"] },
+      profissoes: { name: "Profissões", words: ["Médico", "Advogado", "Pintor", "Pedreiro", "Chefe", "Policial", "Bombeiro", "Juiz", "Dentista", "Piloto", "Motorista", "Ator", "Cantor", "Escritor", "Carteiro", "Padeiro", "Feirante", "Caixa", "Gerente", "Diretor", "Professor", "Enfermeiro", "Cozinheiro", "Garçom", "Garçonete", "Barbeiro", "Costureiro", "Encanador", "Mecânico", "Marceneiro", "Jardineiro", "Agricultor", "Pescador", "Artesão", "Fotógrafo", "Jornalista", "Repórter", "Designer", "Analista", "Arquiteto", "Engenheiro", "Contador", "Secretário", "Vendedor", "Atendente", "Entregador", "Cientista", "Químico", "Biólogo", "Físico", "Geógrafo", "Músico", "Dançarino", "Produtor", "Editor", "Locutor", "Radialista", "Ilustrador", "Animador", "Escultor", "Ceramista", "Ourives", "Joalheiro", "Sapateiro", "Agrônomo", "Florista", "Paisagista", "Apicultor", "Criador", "Treinador", "Árbitro", "Árbitra", "Atleta", "Instrutor", "Guia", "Turismo", "Operador", "Técnico", "Auxiliar", "Supervisor", "Empresário", "Profissão", "Consultor", "Fotógrafa", "Economista", "Geólogo", "Odontólogo", "Pedagogo", "Revisor", "Roteirista", "Terapeuta", "Tradutor", "Vidraceiro", "Vitrinista", "Zelador", "Açougueiro", "Astrônomo", "Arqueólogo", "Boticário", "Cobrador"] },
+      corpo: { name: "Corpo Humano", words: ["Cabeça", "Cabelo", "Olho", "Orelha", "Nariz", "Boca", "Dente", "Língua", "Pescoço", "Ombro", "Braço", "Dedo", "Unha", "Peito", "Barriga", "Costas", "Perna", "Joelho", "Coração", "Pulmão", "Sangue", "Osso", "Pele", "Músculo", "Cérebro", "Veia", "Artéria", "Cotovelo", "Punho", "Quadril", "Coxa", "Canela", "Calcanhar", "Tornozelo", "Nádega", "Queixo", "Bochecha", "Testa", "Cílio", "Pálpebra", "Garganta", "Estômago", "Fígado", "Intestino", "Pâncreas", "Baço", "Crânio", "Costela", "Coluna", "Vértebra", "Tendão", "Ligamento", "Cartilagem", "Nervo", "Célula", "Tecido", "Pupila", "Íris", "Palato", "Gengiva", "Lábio", "Amígdala", "Esôfago", "Traqueia", "Brônquio", "Diafragma", "Pulsação", "Respiração", "Batimento", "Digestão", "Memória", "Equilíbrio", "Postura", "Movimento", "Força", "Energia", "Sentido", "Tato", "Visão", "Audição", "Olfato", "Paladar", "Suor", "Lágrima", "Saliva", "Barba", "Bigode", "Pelos", "Corpo", "Humano", "Faringe", "Laringe", "Uretra", "Bexiga", "Tímpano", "Tórax", "Abdômen", "Pelvis", "Medula", "Retina"] },
+      paises: { name: "Países e Capitais", words: ["Brasil", "Argentina", "Chile", "Peru", "Colômbia", "México", "Canadá", "Portugal", "Espanha", "França", "Itália", "Alemanha", "Rússia", "China", "Japão", "Índia", "Egito", "Angola", "Bolívia", "Paraguai", "Uruguai", "Equador", "Venezuela", "Guiana", "Suriname", "Panamá", "Honduras", "Nicarágua", "Guatemala", "Belize", "Cuba", "Haiti", "Jamaica", "Bahamas", "Islândia", "Noruega", "Suécia", "Finlândia", "Dinamarca", "Irlanda", "Bélgica", "Holanda", "Suíça", "Áustria", "Polônia", "Ucrânia", "Turquia", "Grécia", "Marrocos", "Argélia", "Tunísia", "Quênia", "Nigéria", "Gana", "Senegal", "Etiópia", "Namíbia", "Austrália", "Zelândia", "Coreia", "Mongólia", "Nepal", "Butão", "Vietnã", "Tailândia", "Malásia", "Indonésia", "Filipinas", "Cingapura", "Paquistão", "Iraque", "Israel", "Jordânia", "Líbano", "Síria", "Emirados", "Catar", "Iêmen", "Kuwait", "Brasília", "Buenos", "Santiago", "Lima", "Bogotá", "Caracas", "Quito", "Assunção", "Montevidéu", "Cidade", "Ottawa", "Lisboa", "Madri", "Paris", "Roma", "Berlim", "Moscou", "Pequim", "Tóquio", "Delhi", "Cairo"] },
+      frutas: { name: "Frutas e Vegetais", words: ["Maçã", "Banana", "Pera", "Melancia", "Melão", "Mamão", "Abacaxi", "Morango", "Cereja", "Kiwi", "Manga", "Goiaba", "Caju", "Limão", "Laranja", "Tomate", "Batata", "Cenoura", "Cebola", "Alho", "Alface", "Couve", "Brócolis", "Pepino", "Pimentão", "Chuchu", "Abóbora", "Abacate", "Acerola", "Ameixa", "Amora", "Framboesa", "Mirtilo", "Pêssego", "Nectarina", "Romã", "Tangerina", "Mexerica", "Maracujá", "Pitanga", "Jabuticaba", "Carambola", "Graviola", "Cupuaçu", "Açaí", "Pitaya", "Figo", "Damasco", "Caqui", "Fruta", "Milho", "Ervilha", "Feijão", "Lentilha", "Mandioca", "Inhame", "Quiabo", "Vagem", "Berinjela", "Rabanete", "Beterraba", "Espinafre", "Agrião", "Rúcula", "Repolho", "Couve-flor", "Aipo", "Salsão", "Nabo", "Maxixe", "Jiló", "Alcachofra", "Aspargo", "Alho-poró", "Endívia", "Mostarda", "Manjericão", "Salsinha", "Coentro", "Hortelã", "Alecrim", "Tomilho", "Orégano", "Cebolinha", "Coco", "Castanha", "Amendoim", "Avelã", "Amêndoa", "Pistache", "Azeitona", "Tâmara", "Dátil", "Tamarindo", "Frutas", "Vegetal", "Atemoia", "Physalis", "Mangaba", "Seriguela"] },
+      cores: { name: "Cores", words: ["Branco", "Preto", "Cinza", "Vermelho", "Azul", "Amarelo", "Verde", "Laranja", "Roxo", "Rosa", "Marrom", "Bege", "Lilás", "Violeta", "Dourado", "Prata", "Bronze", "Turquesa", "Carmim", "Magenta", "Ciano", "Índigo", "Escarlate", "Coral", "Creme", "Ocre", "Âmbar", "Ametista", "Lavanda", "Oliva", "Caqui", "Sépia", "Pêssego", "Salmão", "Bordô", "Mostarda", "Cobre", "Grafite", "Pérola", "Marfim", "Caramelo", "Terracota", "Fúcsia", "Anil", "Avelã", "Areia", "Gelo", "Neve", "Fumê", "Rubi", "Safira", "Esmeralda", "Jade", "Topázio", "Ouro", "Aqua", "Celeste", "Canela", "Fendi", "Íris", "Menta", "Opala", "Púrpura", "Rosa-claro", "Rubro", "Siena", "Açafrão", "Alabastro", "Ameixa", "Amêndoa", "Azulão", "Baunilha", "Beterraba", "Carvão", "Cereja", "Chocolate", "Cinábrio", "Damasco", "Goiaba", "Granito", "Hortelã", "Jacinto", "Limão", "Malva", "Melancia", "Musgo", "Pistache", "Tangerina", "Ardósia", "Borgonha", "Cobreado", "Dália", "Fumaça", "Lacre", "Nácar", "Platina", "Rubor", "Rosa-choque", "Verde-água"] },
+      virtudes: { name: "Virtudes e Valores", words: ["Amor", "Alegria", "Bondade", "Justiça", "Verdade", "Coragem", "Respeito", "Empatia", "Perdão", "Gratidão", "Esperança", "Paciência", "Humildade", "Honesto", "Caridade", "Doçura", "Sabedoria", "Amizade", "União", "Pureza", "Cortesia", "Lealdade", "Gentileza", "Confiança", "Atenção", "Cuidado", "Calma", "Serenidade", "Prudência", "Disciplina", "Dedicação", "Esforço", "Educação", "Compaixão", "Tolerância", "Harmonia", "Equilíbrio", "Justeza", "Honra", "Mérito", "Talento", "Habilidade", "Firmeza", "Cooperação", "Parceria", "Ajuda", "Apoio", "Amparo", "Escuta", "Diálogo", "Acolhida", "Modéstia", "Mansidão", "Delicadeza", "Otimismo", "Ânimo", "Vigor", "Vitalidade", "Saúde", "Civismo", "Coerência", "Ética", "Caráter", "Zelo", "Capricho", "Brilho", "Valor", "Dignidade", "Autonomia", "Iniciativa", "Liderança", "Conquista", "Superação", "Vitória", "Altruísmo", "Bravura", "Clareza", "Conselho", "Discrição", "Equidade", "Fidelidade", "Foco", "Honradez", "Inovação", "Liberdade", "Maturidade", "Motivação", "Nobreza", "Ponderação", "Qualidade", "Realização", "Retidão", "Seriedade", "Suavidade", "Valentia", "Veracidade", "Moderação", "Ternura", "Abnegação", "Zeloso"] }
+    };
 
-    // === STREAMING_CHUNK:Defining Timer Manager (Score Removed) ===
-    // Classe responsável por gerenciar e formatar a contagem de tempo
     class TimerManager {
       constructor(onTick) {
-        this.seconds = 0; // Conta total de segundos
-        this.timerId = null; // Identificador da execução do relógio
-        this.onTick = onTick; // Ação executada a cada 1 segundo (atualiza o relógio na tela)
+        this.seconds = 0;
+        this.timerId = null;
+        this.onTick = onTick;
       }
-
       start() {
         this.reset();
         this.timerId = setInterval(() => {
@@ -552,17 +465,14 @@
           this.onTick(this.formatTime(this.seconds));
         }, 1000);
       }
-
       stop() {
         if (this.timerId) clearInterval(this.timerId);
       }
-
       reset() {
         this.stop();
         this.seconds = 0;
         this.onTick(this.formatTime(0));
       }
-
       formatTime(sec) {
         const m = Math.floor(sec / 60).toString().padStart(2, '0');
         const s = (sec % 60).toString().padStart(2, '0');
@@ -570,76 +480,72 @@
       }
     }
 
-    // === STREAMING_CHUNK:Defining Word Search Game Engine ===
-    // Classe principal que gerencia o jogo de Caça-Palavras
+    const DIRECTIONS = [
+      [-1, -1], [-1, 0], [-1, 1], // Noroeste, Norte, Nordeste
+      [0, -1],           [0, 1],  // Oeste, Leste
+      [1, -1],  [1, 0],  [1, 1]   // Sudoeste, Sul, Sudeste
+    ];
+
     class WordSearchGame {
       constructor() {
-        this.gridSize = 14; // Agora esse valor será atualizado com a escolha do usuário
-        this.customWords = []; // Guarda as palavras inseridas
-        this.words = []; // Palavras sendo usadas na rodada
-        this.grid = []; // Estrutura 2D da matriz de letras
-        this.placedWords = []; // Histórico das posições onde as palavras foram encaixadas
-        this.foundWords = new Set(); // Conjunto para armazenar palavras já encontradas
-
-        // Pegando as referências do HTML pros painéis de desenho
-        this.gridCanvas = document.getElementById('grid-canvas'); // Para as Letras
-        this.linesCanvas = document.getElementById('lines-canvas'); // Para as linhas verdes (encontradas)
-        this.dragCanvas = document.getElementById('drag-canvas'); // Para a linha laranja (seleção arrastada)
-
-        // Contextos 2D pra desenhar em cada painel
+        this.gridSize = 15;
+        this.words = [];
+        this.grid = [];
+        this.placedWords = [];
+        this.foundWords = new Set();
+        
+        this.gridCanvas = document.getElementById('grid-canvas');
+        this.linesCanvas = document.getElementById('lines-canvas');
+        this.dragCanvas = document.getElementById('drag-canvas');
         this.ctxGrid = this.gridCanvas.getContext('2d');
         this.ctxLines = this.linesCanvas.getContext('2d');
         this.ctxDrag = this.dragCanvas.getContext('2d');
-
+        
         this.isDragging = false;
         this.startCell = null;
         this.currentCell = null;
+        this.cellSize = 0;
 
         this.timerMgr = new TimerManager(
-          (timeStr) => document.getElementById('timer').textContent = timeStr
+          timeStr => document.getElementById('timer').textContent = timeStr
         );
 
         this.setupEventListeners();
       }
 
-      // Função que inicia o processamento do jogo e exibe na tela, recebendo também o tamanho do grid
       start(wordsList, size) {
         this.gridSize = size;
-        this.customWords = wordsList;
+        this.words = wordsList;
         this.init();
       }
 
-      // Prepara os status do zero para uma nova partida ou re-embaralhamento
       init() {
         document.getElementById('win-modal').classList.remove('active');
-        this.words = [...this.customWords];
-        this.foundWords.clear(); // Limpa estado de achadas
-        this.generateMatrix(); // Gera o grid e encaixa palavras
-        this.renderUIList(); // Renderiza a lista de palavras lateral
+        this.foundWords.clear();
         
-        // Timeout pequeno pra garantir que as divs montaram antes de calcular o tamanho da tela do jogo
-        setTimeout(() => {
-          this.resizeCanvases();
-        }, 50);
+        try {
+          this.generateMatrixWithRetry();
+        } catch (error) {
+          throw error;
+        }
         
-        this.timerMgr.start(); // Dispara o tempo
+        UI.renderWordList(this.placedWords);
+        setTimeout(() => this.resizeCanvases(), 50);
+        this.timerMgr.start();
       }
 
-      // Motor principal que encaixa as palavras na matriz e preenche com letras avulsas
-      generateMatrix() {
-        // Inicializando um grid vazio
+      generateMatrixWithRetry() {
+        const maxRetries = 100;
+        for (let i = 0; i < maxRetries; i++) {
+          if (this.tryGenerateMatrix()) return true;
+        }
+        throw new Error("Não foi possível posicionar todas as palavras nesta matriz. Tente aumentar o tamanho do quadro ou reduzir a quantidade de palavras.");
+      }
+
+      tryGenerateMatrix() {
         this.grid = Array(this.gridSize).fill(null).map(() => Array(this.gridSize).fill(''));
         this.placedWords = [];
-
-        // Direções possíveis para o caça-palavras
-        const directions = [
-          [0, 1],   // Leste
-          [1, 0],   // Sul
-          [-1, -1], // Noroeste
-          [1, -1]   // Sudoeste
-        ];
-
-        // Organizar palavras das maiores pras menores para encaixar mais facilmente
+        
         const sortedWords = [...this.words].sort((a, b) => b.clean.length - a.clean.length);
 
         for (let wordObj of sortedWords) {
@@ -647,14 +553,12 @@
           let placed = false;
           let attempts = 0;
 
-          // Tenta encaixar a palavra na grade em posições aleatórias até 300 vezes
-          while (!placed && attempts < 300) {
+          while (!placed && attempts < 200) {
             attempts++;
-            const dir = directions[Math.floor(Math.random() * directions.length)];
+            const dir = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
             const startRow = Math.floor(Math.random() * this.gridSize);
             const startCol = Math.floor(Math.random() * this.gridSize);
 
-            // Verifica se as posições calculadas estão vazias ou têm uma letra compatível
             if (this.canPlaceWord(word, startRow, startCol, dir)) {
               const cells = [];
               for (let i = 0; i < word.length; i++) {
@@ -663,10 +567,9 @@
                 this.grid[r][c] = word[i];
                 cells.push({ r, c });
               }
-              // Salva o rastreio da palavra para a checagem do mouse depois
               this.placedWords.push({
                 ...wordObj,
-                id: `word_${this.placedWords.length}`, // ID único gerado
+                id: `word_${this.placedWords.length}`,
                 cells,
                 start: cells[0],
                 end: cells[cells.length - 1]
@@ -674,9 +577,9 @@
               placed = true;
             }
           }
+          if (!placed) return false; 
         }
 
-        // Preenche o restante dos espaços vazios com letras aleatórias
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for (let r = 0; r < this.gridSize; r++) {
           for (let c = 0; c < this.gridSize; c++) {
@@ -685,21 +588,19 @@
             }
           }
         }
+        return true;
       }
 
-      // Verifica se a palavra cabe sem vazar o grid e sem sobrescrever letras incorretas
       canPlaceWord(word, r, c, dir) {
         for (let i = 0; i < word.length; i++) {
           const nr = r + dir[0] * i;
           const nc = c + dir[1] * i;
-
           if (nr < 0 || nr >= this.gridSize || nc < 0 || nc >= this.gridSize) return false;
           if (this.grid[nr][nc] !== '' && this.grid[nr][nc] !== word[i]) return false;
         }
         return true;
       }
 
-      // Função que redesenha tudo de forma adaptável baseado no tamanho do navegador (responsividade)
       resizeCanvases() {
         const wrapper = this.gridCanvas.parentElement;
         const rect = wrapper.getBoundingClientRect();
@@ -717,17 +618,11 @@
         this.redrawFoundLines();
       }
 
-      // Ajuda pra limpar os painéis
-      clearCanvas(ctx) {
-        ctx.clearRect(0, 0, this.gridCanvas.width, this.gridCanvas.height);
-      }
-
-      // Escreve as letras das matrizes no Canvas do jogo principal
       drawGrid() {
-        this.clearCanvas(this.ctxGrid);
+        this.ctxGrid.clearRect(0, 0, this.gridCanvas.width, this.gridCanvas.height);
         this.ctxGrid.textAlign = 'center';
         this.ctxGrid.textBaseline = 'middle';
-        this.ctxGrid.font = `600 ${this.cellSize * 0.5}px system-ui, sans-serif`;
+        this.ctxGrid.font = `600 ${this.cellSize * 0.55}px system-ui, sans-serif`;
         this.ctxGrid.fillStyle = '#1e293b';
 
         for (let r = 0; r < this.gridSize; r++) {
@@ -739,7 +634,6 @@
         }
       }
 
-      // Função utilitária que desenha as linhas que atravessam as palavras
       drawLine(ctx, start, end, color) {
         const x1 = start.c * this.cellSize + this.cellSize / 2;
         const y1 = start.r * this.cellSize + this.cellSize / 2;
@@ -755,17 +649,22 @@
         ctx.stroke();
       }
 
-      // Atualiza na tela as linhas verdes das palavras que o usuário já conseguiu acertar
       redrawFoundLines() {
-        this.clearCanvas(this.ctxLines);
+        this.ctxLines.clearRect(0, 0, this.linesCanvas.width, this.linesCanvas.height);
         this.placedWords.forEach(pw => {
           if (this.foundWords.has(pw.id)) {
-            this.drawLine(this.ctxLines, pw.start, pw.end, 'rgba(22, 163, 74, 0.35)');
+            this.drawLine(this.ctxLines, pw.start, pw.end, 'rgba(34, 197, 94, 0.5)');
           }
         });
       }
 
-      // Atribui todos os comandos visuais do mouse, toque de celular e botões aos elementos HTML
+      drawAllAnswers() {
+        this.ctxLines.clearRect(0, 0, this.linesCanvas.width, this.linesCanvas.height);
+        this.placedWords.forEach(pw => {
+          this.drawLine(this.ctxLines, pw.start, pw.end, 'rgba(34, 197, 94, 0.5)');
+        });
+      }
+
       setupEventListeners() {
         window.addEventListener('resize', () => {
            if (!document.getElementById('game-screen').classList.contains('hidden')) {
@@ -775,49 +674,37 @@
 
         const wrapper = this.gridCanvas.parentElement;
 
-        // Identifica clique inicial / Início do touch
         wrapper.addEventListener('pointerdown', (e) => {
+          if(document.body.classList.contains('print-answer') || document.body.classList.contains('print-normal')) return;
           this.isDragging = true;
           this.startCell = this.getCellFromEvent(e);
           this.currentCell = this.startCell;
         });
 
-        // Evento enquanto o usuário arrasta o dedo ou segura o clique no mouse
         wrapper.addEventListener('pointermove', (e) => {
           if (!this.isDragging) return;
           const newCell = this.getCellFromEvent(e);
           if (!this.currentCell || newCell.r !== this.currentCell.r || newCell.c !== this.currentCell.c) {
-            this.currentCell = this.alignCell(this.startCell, newCell);
-            this.clearCanvas(this.ctxDrag);
+            this.currentCell = this.alignCellTo8Directions(this.startCell, newCell);
+            this.ctxDrag.clearRect(0, 0, this.dragCanvas.width, this.dragCanvas.height);
             if (this.currentCell) {
               this.drawLine(this.ctxDrag, this.startCell, this.currentCell, 'rgba(217, 119, 6, 0.4)');
             }
           }
         });
 
-        // Quando o usuário solta o clique / retira o dedo
         window.addEventListener('pointerup', () => {
           if (!this.isDragging) return;
           this.isDragging = false;
-          this.clearCanvas(this.ctxDrag);
+          this.ctxDrag.clearRect(0, 0, this.dragCanvas.width, this.dragCanvas.height);
           if (this.startCell && this.currentCell) {
-            this.checkSelection(this.startCell, this.currentCell); // Analisa a seleção final do usuário
+            this.checkSelection(this.startCell, this.currentCell);
           }
           this.startCell = null;
           this.currentCell = null;
         });
-
-        // Mapeia eventos para os cliques dos botões de controle
-        document.getElementById('btn-restart').addEventListener('click', () => this.init());
-        document.getElementById('btn-hint').addEventListener('click', () => this.giveHint());
-        document.getElementById('btn-play-again').addEventListener('click', () => this.init());
-        
-        const triggerPrint = () => window.print();
-        document.getElementById('btn-print').addEventListener('click', triggerPrint);
-        document.getElementById('btn-print-answers').addEventListener('click', triggerPrint);
       }
 
-      // Calcula a exata célula clicada baseada nos eixos X/Y e margem
       getCellFromEvent(e) {
         const rect = this.gridCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -827,18 +714,16 @@
         return { r, c };
       }
 
-      // Corrige a seleção para ser apenas perfeitamente na horizontal, vertical ou diagonal
-      alignCell(start, current) {
+      alignCellTo8Directions(start, current) {
         const dr = current.r - start.r;
         const dc = current.c - start.c;
+        if (dr === 0 && dc === 0) return current;
 
-        if (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc)) {
-          return current;
-        }
-
+        const angle = Math.atan2(dr, dc);
+        const snapAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
+        const stepR = Math.round(Math.sin(snapAngle));
+        const stepC = Math.round(Math.cos(snapAngle));
         const maxDist = Math.max(Math.abs(dr), Math.abs(dc));
-        const stepR = dr === 0 ? 0 : Math.round(dr / maxDist);
-        const stepC = dc === 0 ? 0 : Math.round(dc / maxDist);
 
         return {
           r: Math.max(0, Math.min(this.gridSize - 1, start.r + stepR * maxDist)),
@@ -846,32 +731,26 @@
         };
       }
 
-      // Valida se as duas pontas da seleção equivalem a alguma palavra verdadeira do quadro
       checkSelection(start, end) {
         const found = this.placedWords.find(pw => {
-          if (this.foundWords.has(pw.id)) return false; // Impede encontrar duas vezes
-          
-          // Confere de trás pra frente e de frente pra trás
+          if (this.foundWords.has(pw.id)) return false;
           const matchNormal = (pw.start.r === start.r && pw.start.c === start.c && pw.end.r === end.r && pw.end.c === end.c);
           const matchReverse = (pw.start.r === end.r && pw.start.c === end.c && pw.end.r === start.r && pw.end.c === start.c);
           return matchNormal || matchReverse;
         });
 
         if (found) {
-          // Quando achada: Salva a ID da palavra e atualiza o jogo
           this.foundWords.add(found.id);
           this.redrawFoundLines();
-          this.updateUIList();
+          UI.updateWordFound(found.id, this.foundWords.size, this.placedWords.length);
 
-          // Verifica se o usuário completou tudo
           if (this.foundWords.size === this.placedWords.length) {
             this.timerMgr.stop();
-            document.getElementById('win-modal').classList.add('active'); // Abre popup final
+            document.getElementById('win-modal').classList.add('active');
           }
         }
       }
 
-      // Ação do Botão revelar, descobre magicamente 1 palavra que falta
       giveHint() {
         const uncollected = this.placedWords.filter(pw => !this.foundWords.has(pw.id));
         if (uncollected.length === 0) return;
@@ -879,113 +758,333 @@
         const target = uncollected[Math.floor(Math.random() * uncollected.length)];
         this.foundWords.add(target.id);
         this.redrawFoundLines();
-        this.updateUIList();
+        UI.updateWordFound(target.id, this.foundWords.size, this.placedWords.length);
 
-        // Checa se, com a dica, a pessoa venceu
         if (this.foundWords.size === this.placedWords.length) {
           this.timerMgr.stop();
           document.getElementById('win-modal').classList.add('active');
         }
       }
+    }
 
-      // Monta as linhas `<li>` para listar todas as palavras de procuradas na barra lateral
-      renderUIList() {
+    const UI = {
+      showError(msg) {
+        const el = document.getElementById('setup-error');
+        el.textContent = msg;
+        el.classList.remove('hidden');
+      },
+      hideError() {
+        document.getElementById('setup-error').classList.add('hidden');
+      },
+      renderWordList(placedWords) {
         const container = document.getElementById('word-list-ui');
         container.innerHTML = '';
-        document.getElementById('total-count').textContent = this.placedWords.length;
+        document.getElementById('total-count').textContent = placedWords.length;
         document.getElementById('found-count').textContent = 0;
 
-        this.placedWords.forEach(w => {
+        placedWords.forEach(w => {
           const li = document.createElement('li');
           li.className = 'word-item';
-          li.id = `ui-${w.id}`; // Uses unique ID 
+          li.id = `ui-${w.id}`;
           li.textContent = w.display;
           container.appendChild(li);
         });
+      },
+      updateWordFound(id, foundCount, totalCount) {
+        document.getElementById('found-count').textContent = foundCount;
+        const el = document.getElementById(`ui-${id}`);
+        if (el) el.classList.add('found');
+      },
+      sanitizeWord(word) {
+        return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toUpperCase();
+      },
+      shuffleArray(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
       }
+    };
 
-      // Aplica o estilo visual de texto riscado às palavras que o jogador achou
-      updateUIList() {
-        document.getElementById('found-count').textContent = this.foundWords.size;
-        this.foundWords.forEach(id => {
-          const el = document.getElementById(`ui-${id}`);
-          if (el) el.classList.add('found');
-        });
-      }
-    }
+    let gameInstance = null;
+    let currentMode = 'manual';
 
-    // === STREAMING_CHUNK:Initializing Application and Screen Switching ===
-    let game = null;
-
-    // Aguarda o HTML principal ser montado na tela para liberar a configuração inicial
     document.addEventListener('DOMContentLoaded', () => {
-      // Cria a marca d'água no rodapé usando a URL em que a página está aberta
-      const watermark = document.getElementById('footer-watermark');
-      if (watermark) {
-        watermark.textContent = "Gerado em: " + window.location.href;
-      }
-
-      const btnGenerate = document.getElementById('btn-generate');
-      const btnEdit = document.getElementById('btn-edit');
-      const btnNewGameModal = document.getElementById('btn-new-game-modal');
-      const errorMsg = document.getElementById('setup-error');
       
-      const setupScreen = document.getElementById('setup-screen');
-      const gameScreen = document.getElementById('game-screen');
-      const winModal = document.getElementById('win-modal');
+      const selectTheme = document.getElementById('auto-theme');
+      Object.entries(THEMES).forEach(([key, theme]) => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = theme.name;
+        selectTheme.appendChild(opt);
+      });
 
-      // Restaura o visual inicial para o usuário digitar mais palavras (Editar ou Novo Jogo)
-      function showSetup() {
-        if(game) game.timerMgr.stop();
-        gameScreen.classList.add('hidden');
-        winModal.classList.remove('active');
-        setupScreen.classList.remove('hidden');
+      const btnManual = document.getElementById('btn-mode-manual');
+      const btnAuto = document.getElementById('btn-mode-auto');
+      const manualFields = document.getElementById('manual-fields');
+      const autoFields = document.getElementById('auto-fields');
+      const titleFields = document.getElementById('title-fields');
+
+      btnManual.addEventListener('click', () => {
+        currentMode = 'manual';
+        btnManual.classList.add('active');
+        btnAuto.classList.remove('active');
+        manualFields.classList.remove('hidden');
+        autoFields.classList.add('hidden');
+        titleFields.classList.remove('hidden');
+        UI.hideError();
+      });
+
+      btnAuto.addEventListener('click', () => {
+        currentMode = 'auto';
+        btnAuto.classList.add('active');
+        btnManual.classList.remove('active');
+        autoFields.classList.remove('hidden');
+        manualFields.classList.add('hidden');
+        titleFields.classList.add('hidden');
+        updateQuantityOptions();
+        UI.hideError();
+      });
+
+      const selectGridSize = document.getElementById('grid-size');
+      const selectQuantity = document.getElementById('auto-quantity');
+
+      function updateQuantityOptions() {
+        const size = selectGridSize.value;
+        const ranges = {
+          "10": { min: 3, max: 7 },
+          "15": { min: 7, max: 15 },
+          "20": { min: 10, max: 20 }
+        };
+        const cfg = ranges[size] || ranges["15"];
+        
+        selectQuantity.innerHTML = '';
+        for (let i = cfg.min; i <= cfg.max; i++) {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = i;
+          if (i === Math.floor((cfg.min + cfg.max) / 2)) opt.selected = true;
+          selectQuantity.appendChild(opt);
+        }
       }
+      
+      selectGridSize.addEventListener('change', updateQuantityOptions);
 
-      btnEdit.addEventListener('click', showSetup);
-      btnNewGameModal.addEventListener('click', showSetup);
+      selectTheme.addEventListener('change', () => {
+        if (selectTheme.value) {
+          const themeName = THEMES[selectTheme.value].name;
+          document.getElementById('game-title').value = `Caça-Palavras — ${themeName}`;
+          document.getElementById('game-subtitle').value = `Encontre as palavras relacionadas ao tema ${themeName}.`;
+        }
+      });
 
-      // Clicou para Gerar o Caça-Palavras
-      btnGenerate.addEventListener('click', () => {
-        errorMsg.classList.add('hidden');
-        const customWordsList = [];
+      document.getElementById('btn-generate').addEventListener('click', () => {
+        UI.hideError();
+        let wordsList = [];
+        const selectedSize = parseInt(document.getElementById('grid-size').value, 10);
 
-        // Coleta e filtra texto dos 10 campos de palavras
-        for (let i = 1; i <= 10; i++) {
-          const inputVal = document.getElementById(`word-${i}`).value.trim();
-          if (inputVal.length > 0) {
-            customWordsList.push({
-              display: inputVal.toUpperCase(),
-              clean: sanitizeWord(inputVal)
-            });
+        if (currentMode === 'manual') {
+          for (let i = 1; i <= 10; i++) {
+            const val = document.getElementById(`word-${i}`).value.trim();
+            if (val.length > 0) {
+              const clean = UI.sanitizeWord(val);
+              
+              if (clean.length < 3) {
+                return UI.showError(`A palavra "${val}" é muito curta. Mínimo de 3 caracteres.`);
+              }
+              if (clean.length > selectedSize) {
+                return UI.showError(`A palavra "${val}" possui ${clean.length} caracteres e não cabe em uma matriz ${selectedSize}x${selectedSize}. Selecione uma matriz maior.`);
+              }
+              if (wordsList.some(w => w.clean === clean)) {
+                return UI.showError(`A palavra "${val}" já foi adicionada. Remova palavras duplicadas.`);
+              }
+              
+              wordsList.push({ display: val.toUpperCase(), clean });
+            }
           }
+          if (wordsList.length < 3) return UI.showError("Insira pelo menos 3 palavras.");
+          
+        } else {
+          const themeKey = selectTheme.value;
+          if (!themeKey) return UI.showError("Selecione um tema válido.");
+          
+          const themeName = THEMES[themeKey].name;
+          document.getElementById('game-title').value = `Caça-Palavras — ${themeName}`;
+          document.getElementById('game-subtitle').value = `Encontre as palavras relacionadas ao tema ${themeName}.`;
+          
+          const qty = parseInt(selectQuantity.value, 10);
+          const themeWords = THEMES[themeKey].words.filter(w => UI.sanitizeWord(w).length <= selectedSize);
+          
+          if (themeWords.length < qty) {
+            return UI.showError(`O tema "${THEMES[themeKey].name}" não possui ${qty} palavras que caibam na matriz ${selectedSize}x${selectedSize}. Aumente o quadro ou reduza a quantidade.`);
+          }
+          
+          const shuffled = UI.shuffleArray([...themeWords]);
+          const selected = shuffled.slice(0, qty);
+          
+          wordsList = selected.map(w => ({
+            display: w.toUpperCase(),
+            clean: UI.sanitizeWord(w)
+          }));
         }
 
-        // Impede a geração se não houver palavras suficientes inseridas pelo usuário
-        if (customWordsList.length < 3) {
-          errorMsg.textContent = "Por favor, preencha pelo menos 3 palavras para gerar o jogo.";
-          errorMsg.classList.remove('hidden');
-          return;
-        }
-
-        // Pega valores preenchidos ou usa textos padrão genéricos
         const titleVal = document.getElementById('game-title').value.trim() || "Meu Caça-Palavras";
         const descVal = document.getElementById('game-subtitle').value.trim() || "Encontre as palavras escondidas!";
-        const selectedSize = parseInt(document.getElementById('grid-size').value, 10);
-        
         document.getElementById('header-title').textContent = titleVal;
         document.getElementById('header-desc').textContent = descVal;
 
-        // Oculta tela de form. Exibe jogo.
-        setupScreen.classList.add('hidden');
-        gameScreen.classList.remove('hidden');
+        // Gerar metadados congelados deste momento (utilizado no PDF e rodapés)
+        const now = new Date();
+        const pad = n => n.toString().padStart(2, '0');
+        generationMeta = {
+          dateBR: `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`,
+          dateISO: `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`,
+          host: window.location.hostname || 'localhost'
+        };
+        const footerText = `Gerado em: ${generationMeta.dateBR} | Origem: ${generationMeta.host}`;
+        document.getElementById('footer-watermark').textContent = footerText;
 
-        // Cria e reseta o jogo
-        if (!game) {
-          game = new WordSearchGame();
+        if (!gameInstance) gameInstance = new WordSearchGame();
+        
+        try {
+          gameInstance.start(wordsList, selectedSize);
+          document.getElementById('setup-screen').classList.add('hidden');
+          document.getElementById('game-screen').classList.remove('hidden');
+        } catch (e) {
+          UI.showError(e.message);
         }
-        game.start(customWordsList, selectedSize); // Passa o tamanho selecionado pro jogo
       });
+
+      const returnToSetup = () => {
+        if(gameInstance) gameInstance.timerMgr.stop();
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('win-modal').classList.remove('active');
+        document.getElementById('setup-screen').classList.remove('hidden');
+      };
+
+      document.getElementById('btn-edit').addEventListener('click', returnToSetup);
+      document.getElementById('btn-new-game-modal').addEventListener('click', returnToSetup);
+      document.getElementById('btn-restart').addEventListener('click', () => gameInstance.init());
+      document.getElementById('btn-play-again').addEventListener('click', () => gameInstance.init());
+      document.getElementById('btn-hint').addEventListener('click', () => gameInstance.giveHint());
+      
+      const executePrint = (mode) => {
+        if (mode === 'answer') {
+          document.body.classList.add('print-answer');
+          if (gameInstance) gameInstance.drawAllAnswers();
+        } else {
+          document.body.classList.add('print-normal');
+        }
+        
+        // Um pequeno delay garante que o canvas seja redesenhado e o DOM atualizado 
+        // antes de o navegador "congelar" a tela para a janela de impressão.
+        setTimeout(() => {
+          window.print();
+          document.body.classList.remove('print-normal', 'print-answer');
+          if (gameInstance) gameInstance.redrawFoundLines(); 
+        }, 300);
+      };
+
+      document.getElementById('btn-print').addEventListener('click', () => executePrint('normal'));
+      document.getElementById('btn-print-answers-inline').addEventListener('click', () => executePrint('answer'));
+      document.getElementById('btn-print-answers').addEventListener('click', () => executePrint('answer'));
+
+      const generatePDF = (withAnswerKeyOnly = false) => {
+        if (!window.jspdf || !gameInstance) return alert("Erro ao inicializar biblioteca de PDF.");
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const title = document.getElementById('header-title').textContent;
+        const subtitle = document.getElementById('header-desc').textContent;
+        const size = gameInstance.gridSize;
+        const cellSize = Math.min(10, 150 / size); 
+        const gridWidth = size * cellSize;
+        const startX = (210 - gridWidth) / 2;
+
+        const addFooter = (currentPage, totalPages) => {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(9);
+          doc.setTextColor(100, 116, 139);
+          const footerStr = `Gerado em: ${generationMeta.dateBR} | Origem: ${generationMeta.host}`;
+          doc.text(footerStr, 105, 290, { align: "center" });
+          if (totalPages > 1) {
+            doc.text(`Página ${currentPage} de ${totalPages}`, 195, 290, { align: "right" });
+          }
+        };
+
+        const drawPage = (isAnswerKey, pageNum, totalPages) => {
+          let y = 20;
+          doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.setTextColor(124, 45, 18);
+          doc.text(isAnswerKey ? title + " - GABARITO" : title, 105, y, { align: "center" });
+          
+          y += 10;
+          doc.setFont("helvetica", "normal"); doc.setFontSize(12); doc.setTextColor(100, 116, 139);
+          doc.text(subtitle, 105, y, { align: "center" });
+          
+          const startY = y + 15;
+
+          if (isAnswerKey) {
+            doc.setDrawColor(22, 163, 74); 
+            doc.setLineWidth(cellSize * 0.7);
+            doc.setLineCap('round');
+            gameInstance.placedWords.forEach(pw => {
+              const x1 = startX + pw.start.c * cellSize + cellSize / 2;
+              const y1 = startY + pw.start.r * cellSize + cellSize / 2;
+              const x2 = startX + pw.end.c * cellSize + cellSize / 2;
+              const y2 = startY + pw.end.r * cellSize + cellSize / 2;
+              doc.line(x1, y1, x2, y2);
+            });
+          }
+
+          doc.setFont("helvetica", "bold"); doc.setFontSize(cellSize * 0.6);
+          for(let r=0; r<size; r++) {
+            for(let c=0; c<size; c++) {
+              const char = gameInstance.grid[r][c];
+              const xPos = startX + c * cellSize + cellSize / 2;
+              const yPos = startY + r * cellSize + cellSize / 2;
+              doc.setTextColor(0, 0, 0); 
+              doc.text(char, xPos, yPos, { align: 'center', baseline: 'middle' });
+            }
+          }
+
+          if (!isAnswerKey) {
+            y = startY + gridWidth + 20;
+            doc.setFontSize(14); doc.setTextColor(124, 45, 18);
+            doc.text("Palavras para encontrar:", 105, y, { align: "center" });
+            
+            y += 10; doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+            const cols = 3; const colWidth = 180 / cols; let currentX = 15;
+            
+            gameInstance.placedWords.forEach((pw, idx) => {
+              if (idx > 0 && idx % cols === 0) { y += 7; currentX = 15; }
+              doc.text(pw.display, currentX, y);
+              currentX += colWidth;
+            });
+          }
+          
+          addFooter(pageNum, totalPages);
+        };
+
+        let filename = "";
+        
+        if (withAnswerKeyOnly) {
+          drawPage(true, 1, 1);
+          filename = `caca-palavras-${generationMeta.dateISO}-gabarito.pdf`;
+        } else {
+          drawPage(false, 1, 2); // Pagina 1
+          doc.addPage();
+          drawPage(true, 2, 2);  // Pagina 2
+          filename = `caca-palavras-${generationMeta.dateISO}.pdf`;
+        }
+        
+        doc.save(filename);
+      };
+
+      document.getElementById('btn-pdf').addEventListener('click', () => generatePDF(false));
+      document.getElementById('btn-pdf-answers').addEventListener('click', () => generatePDF(true));
     });
   </script>
 </body>
