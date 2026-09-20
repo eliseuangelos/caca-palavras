@@ -4,7 +4,29 @@
   <meta charset="UTF-8">
   <meta name="google-site-verification" content="7uBMpQdMikUwnbO_WabTQvwaZ6aXgKW0TBJFwNi6K54" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Caça-Palavras</title>
+  
+  <title>Gerador de Caça-Palavras Online Grátis | Crie e Imprima</title>
+
+  <meta name="description" content="Crie caça-palavras personalizados online grátis. Escolha as palavras, gere o jogo automaticamente ou por tema, imprima ou salve em PDF.">
+  <meta name="keywords" content="caça-palavras, gerador de caça-palavras, caça palavras online, criar caça-palavras, caça-palavras personalizado, caça-palavras para imprimir, caça-palavras PDF, jogo de palavras">
+  <meta name="author" content="Eliseu Fernandes Laurindo">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="pt-BR">
+
+  <link rel="canonical" href="https://eliseuangelos.github.io/caca-palavras/">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Gerador de Caça-Palavras Online Grátis">
+  <meta property="og:description" content="Crie caça-palavras personalizados online. Gere por palavras ou por tema, imprima ou salve seu jogo em PDF.">
+  <meta property="og:url" content="https://eliseuangelos.github.io/caca-palavras/">
+  <meta property="og:site_name" content="Gerador de Caça-Palavras">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gerador de Caça-Palavras Online Grátis">
+  <meta name="twitter:description" content="Crie caça-palavras personalizados, gere automaticamente por tema, imprima ou salve em PDF.">
   
   <!-- Biblioteca para geração do PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1039,7 +1061,7 @@
             });
           }
 
-          doc.setFont("helvetica", "bold"); doc.setFontSize(cellSize * 0.6);
+          doc.setFont("helvetica", "bold"); doc.setFontSize(cellSize * 1.5);
           for(let r=0; r<size; r++) {
             for(let c=0; c<size; c++) {
               const char = gameInstance.grid[r][c];
