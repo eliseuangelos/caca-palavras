@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- O gerador é uma página única: as abas (#revista, #pagina, #ajuda...) não são URLs separadas para os buscadores,
+       então só a página principal entra aqui. Atualize a data de <lastmod> quando publicar uma mudança relevante. -->
+  <url>
+    <loc>https://eliseuangelos.github.io/caca-palavras/</loc>
+    <lastmod>2026-11-10</lastmod>
+  </url>
+</urlset>

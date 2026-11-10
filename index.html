@@ -2,1112 +2,510 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="7uBMpQdMikUwnbO_WabTQvwaZ6aXgKW0TBJFwNi6K54" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Gerador de Caça-Palavras Online Grátis | Crie e Imprima</title>
+  <!-- Bing Webmaster Tools (opcional): para verificar o site por meta tag, cole aqui a linha fornecida pelo Bing, no formato:
+       <meta name="msvalidate.01" content="CÓDIGO-FORNECIDO-PELO-BING" />
+       (também é possível importar o site direto do Google Search Console — veja o README.md) -->
 
-  <meta name="description" content="Crie caça-palavras personalizados online grátis. Escolha as palavras, gere o jogo automaticamente ou por tema, imprima ou salve em PDF.">
-  <meta name="keywords" content="caça-palavras, gerador de caça-palavras, caça palavras online, criar caça-palavras, caça-palavras personalizado, caça-palavras para imprimir, caça-palavras PDF, jogo de palavras">
+  <title>Gerador de Caça-Palavras Grátis: crie, imprima e baixe em PDF</title>
+  <meta name="description" content="Crie caça-palavras online e grátis: jogo individual, revistas de passatempo com até 50 jogos e páginas de atividades em PDF A4, com gabarito.">
+  <meta name="keywords" content="caça-palavras, gerador de caça-palavras, caça-palavras para imprimir, caça-palavras em PDF, revista de passatempo, atividade educativa">
   <meta name="author" content="Eliseu Fernandes Laurindo">
-  <meta name="robots" content="index, follow">
-  <meta name="language" content="pt-BR">
-
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F4F7FB" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111C28" media="(prefers-color-scheme: dark)">
   <link rel="canonical" href="https://eliseuangelos.github.io/caca-palavras/">
 
-  <!-- Open Graph / Facebook / WhatsApp -->
+  <!-- Marca pessoal oficial: os mesmos arquivos de https://eliseuangelos.github.io/assets/icons/ -->
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="icon" href="assets/icons/favicon-48.png" type="image/png" sizes="48x48">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+
+  <!-- Fontes da marca (Inter e IBM Plex Mono). Carregam sem travar a página; se não carregarem, o site usa as fontes do sistema. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn…) -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Gerador de Caça-Palavras Online Grátis">
-  <meta property="og:description" content="Crie caça-palavras personalizados online. Gere por palavras ou por tema, imprima ou salve seu jogo em PDF.">
-  <meta property="og:url" content="https://eliseuangelos.github.io/caca-palavras/">
   <meta property="og:site_name" content="Gerador de Caça-Palavras">
   <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Gerador de Caça-Palavras Grátis: crie, imprima e baixe em PDF">
+  <meta property="og:description" content="Jogo individual, revistas de passatempo com até 50 jogos e páginas de atividades em PDF A4, com gabarito. Direto no navegador.">
+  <meta property="og:url" content="https://eliseuangelos.github.io/caca-palavras/">
+  <meta property="og:image" content="https://eliseuangelos.github.io/caca-palavras/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Matriz de caça-palavras com uma palavra destacada e o título Gerador de Caça-Palavras, com o símbolo da marca pessoal">
 
-  <!-- Twitter -->
+  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Gerador de Caça-Palavras Online Grátis">
-  <meta name="twitter:description" content="Crie caça-palavras personalizados, gere automaticamente por tema, imprima ou salve em PDF.">
-  
-  <!-- Biblioteca para geração do PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta name="twitter:title" content="Gerador de Caça-Palavras Grátis: crie, imprima e baixe em PDF">
+  <meta name="twitter:description" content="Jogo individual, revistas com até 50 caça-palavras e páginas de atividades em PDF A4, com gabarito.">
+  <meta name="twitter:image" content="https://eliseuangelos.github.io/caca-palavras/assets/img/og-image.png">
+  <meta name="twitter:image:alt" content="Matriz de caça-palavras com uma palavra destacada">
 
-  <style>
-    :root {
-      --primary-color: #7c2d12;
-      --primary-light: #9a3412;
-      --accent-color: #d97706;
-      --bg-color: #fef3c7;
-      --card-bg: #ffffff;
-      --text-color: #1e293b;
-      --found-color: #16a34a;
-      --line-color: rgba(22, 163, 74, 0.4);
-      --drag-color: rgba(217, 119, 6, 0.4);
-      --border-radius: 12px;
-      --error-color: #dc2626;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      padding: 1rem;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    header h1 {
-      color: var(--primary-color);
-      font-size: 2rem;
-      margin-bottom: 0.25rem;
-    }
-    header p {
-      color: #64748b;
-      font-size: 1rem;
-    }
-
-    main {
-      width: 100%;
-      max-width: 1100px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .setup-card {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 700px;
-    }
-    .setup-card h2 {
-      color: var(--primary-color);
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-    .setup-card > p {
-      text-align: center;
-      color: #64748b;
-      margin-bottom: 1.5rem;
-    }
-
-    .mode-switcher {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .mode-btn {
-      flex: 1;
-      min-width: 200px;
-      padding: 0.85rem 1rem;
-      border: 2px solid #cbd5e1;
-      background: white;
-      color: #64748b;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    .mode-btn:hover { background: #f8fafc; }
-    .mode-btn.active {
-      border-color: var(--primary-color);
-      background: var(--bg-color);
-      color: var(--primary-color);
-    }
-
-    .error-msg {
-      background-color: #fee2e2;
-      color: var(--error-color);
-      padding: 0.75rem;
-      border-radius: 6px;
-      margin-bottom: 1rem;
-      text-align: center;
-      font-weight: 600;
-      border: 1px solid #f87171;
-    }
-    .setup-form-group {
-      margin-bottom: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .setup-form-group label {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--primary-color);
-    }
-    .setup-form-group input,
-    .setup-form-group select {
-      padding: 0.75rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 1rem;
-      background-color: white;
-      transition: all 0.2s;
-    }
-    .setup-form-group input:focus,
-    .setup-form-group select:focus {
-      outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
-    }
-    .setup-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .mb-6 { margin-bottom: 1.5rem; }
-
-    .game-layout {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: center;
-      align-items: flex-start;
-      width: 100%;
-    }
-    .game-board-container {
-      background: var(--card-bg);
-      padding: 1rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      position: relative;
-      user-select: none;
-      touch-action: none;
-    }
-    .canvas-wrapper {
-      position: relative;
-      width: 500px;
-      height: 500px;
-      max-width: 85vw;
-      max-height: 85vw;
-    }
-    .canvas-wrapper canvas {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: 8px;
-    }
-    #lines-canvas { z-index: 10; pointer-events: none; }
-    #grid-canvas { z-index: 20; pointer-events: none; }
-    #drag-canvas { z-index: 30; pointer-events: none; }
-
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      width: 320px;
-      max-width: 100%;
-    }
-    .card {
-      background: var(--card-bg);
-      padding: 1.25rem;
-      border-radius: var(--border-radius);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    .status-panel {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    .status-item { text-align: center; }
-    .status-label { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 600; }
-    .status-value { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); }
-
-    .actions { display: flex; flex-direction: column; gap: 0.5rem; }
-    .btn-row { display: flex; gap: 0.5rem; }
-    button {
-      flex: 1; padding: 0.75rem 1rem; border: none;
-      border-radius: 6px; font-weight: 600; cursor: pointer;
-      transition: all 0.2s ease; font-size: 0.95rem;
-    }
-    .btn-primary { background-color: var(--primary-color); color: white; }
-    .btn-primary:hover { background-color: var(--primary-light); }
-    .btn-secondary { background-color: var(--accent-color); color: white; }
-    .btn-secondary:hover { filter: brightness(0.9); }
-    .btn-outline { background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
-    .btn-outline:hover { background-color: #fffbeb; }
-    .w-full { width: 100%; }
-
-    .word-list-card h2 {
-      font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--primary-color);
-      border-bottom: 2px solid var(--bg-color); padding-bottom: 0.5rem;
-    }
-    .word-list {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; list-style: none;
-    }
-    .word-item {
-      font-size: 0.95rem; font-weight: 600; color: #475569;
-      padding: 0.25rem 0.5rem; border-radius: 4px; transition: all 0.3s ease;
-    }
-    .word-item.found {
-      color: var(--found-color); text-decoration: line-through; background-color: #dcfce7;
-    }
-
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center;
-      z-index: 1000; padding: 1rem;
-    }
-    .modal.active { display: flex; }
-    .modal-content {
-      background: white; padding: 2rem; border-radius: var(--border-radius);
-      text-align: center; max-width: 400px; width: 100%;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-    .modal-content h2 { color: var(--primary-color); font-size: 1.75rem; margin-bottom: 0.5rem; }
-    .modal-content p { margin-bottom: 1.5rem; color: #475569; }
-
-    footer { margin-top: auto; padding: 1.5rem 0 0.5rem 0; text-align: center; font-size: 0.85rem; color: #78350f; font-weight: 500; }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      .setup-grid { grid-template-columns: 1fr; }
-      .game-layout { flex-direction: column; align-items: center; }
-      .sidebar { width: 100%; max-width: 500px; }
-      .sidebar > div:first-child { order: 2; }
-      .sidebar > .word-list-card { order: 1; }
-    }
-
-    @media print {
-      @page { margin: 1cm; }
-      body, html { background: transparent !important; color: #000 !important; }
-      .game-board-container, .card, .setup-card, .modal { background: transparent !important; box-shadow: none !important; border: none !important; }
-      .status-panel, .actions, .modal, button, #setup-screen, .mode-switcher { display: none !important; }
-      
-      .game-layout { flex-direction: column !important; align-items: center !important; display: flex !important; }
-      .game-board-container { margin-bottom: 2rem !important; }
-      .sidebar { width: 100% !important; max-width: 100% !important; display: block !important; }
-      
-      .word-list { grid-template-columns: repeat(4, 1fr) !important; gap: 0.5rem !important; text-align: center; }
-      header h1, header p, footer p, .word-item { color: #000 !important; }
-      .word-list-card h2 { border-bottom: 1px solid #000 !important; }
-      .print-hidden { display: none !important; }
-      
-      /* Tratamento Específico para Impressão Normal */
-      body.print-normal #lines-canvas { display: none !important; }
-      body.print-normal .word-item { text-decoration: none !important; background-color: transparent !important; color: #000 !important; }
-      
-      /* Tratamento Específico para Impressão Gabarito */
-      body.print-answer #lines-canvas { display: block !important; }
-      body.print-answer .word-item { background-color: transparent !important; color: #000 !important; }
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1 id="header-title">Gerador de Caça-Palavras</h1>
-    <p id="header-desc">Preencha os campos abaixo para gerar seu próprio caça-palavras. Ou utilize o "Gerador Automático por Tema".</p>
-  </header>
-
-  <main>
-    <section id="setup-screen" class="setup-card">
-      <div class="mode-switcher">
-        <button id="btn-mode-manual" class="mode-btn active" aria-label="Ativar Gerador Manual">✏️ Gerador Manual</button>
-        <button id="btn-mode-auto" class="mode-btn" aria-label="Ativar Gerador Automático">🎲 Gerador Automático</button>
-      </div>
-
-      <div id="setup-error" class="error-msg hidden"></div>
-
-      <div id="title-fields">
-        <div class="setup-form-group">
-          <label for="game-title">Título Principal</label>
-          <input type="text" id="game-title" placeholder="Ex: Meu Caça-Palavras" maxlength="40">
-        </div>
-        <div class="setup-form-group">
-          <label for="game-subtitle">Subtítulo ou Dica</label>
-          <input type="text" id="game-subtitle" placeholder="Ex: Encontre as palavras escondidas" maxlength="60">
-        </div>
-      </div>
-      
-      <div class="setup-form-group mb-6">
-        <label for="grid-size">Tamanho do Quadro</label>
-        <select id="grid-size">
-          <option value="10">10x10 (Pequeno - Palavras até 10 letras)</option>
-          <option value="15" selected>15x15 (Médio - Palavras até 15 letras)</option>
-          <option value="20">20x20 (Grande - Palavras até 20 letras)</option>
-        </select>
-      </div>
-
-      <div id="auto-fields" class="hidden">
-        <div class="setup-grid mb-6">
-          <div class="setup-form-group">
-            <label for="auto-theme">Tema</label>
-            <select id="auto-theme">
-              <option value="">Selecione um tema</option>
-            </select>
-          </div>
-          <div class="setup-form-group">
-            <label for="auto-quantity">Quantidade de palavras</label>
-            <select id="auto-quantity"></select>
-          </div>
-        </div>
-      </div>
-
-      <div id="manual-fields">
-        <div class="setup-form-group mb-6">
-          <label>Palavras (Insira no mínimo 3 palavras)</label>
-          <div class="setup-grid">
-            <input type="text" id="word-1" placeholder="Palavra 1" maxlength="20">
-            <input type="text" id="word-2" placeholder="Palavra 2" maxlength="20">
-            <input type="text" id="word-3" placeholder="Palavra 3" maxlength="20">
-            <input type="text" id="word-4" placeholder="Palavra 4" maxlength="20">
-            <input type="text" id="word-5" placeholder="Palavra 5" maxlength="20">
-            <input type="text" id="word-6" placeholder="Palavra 6" maxlength="20">
-            <input type="text" id="word-7" placeholder="Palavra 7" maxlength="20">
-            <input type="text" id="word-8" placeholder="Palavra 8" maxlength="20">
-            <input type="text" id="word-9" placeholder="Palavra 9" maxlength="20">
-            <input type="text" id="word-10" placeholder="Palavra 10" maxlength="20">
-          </div>
-        </div>
-      </div>
-
-      <button id="btn-generate" class="btn-primary w-full">Gerar Caça-Palavras</button>
-    </section>
-
-    <div id="game-screen" class="game-layout hidden">
-      <section class="game-board-container" aria-label="Área do Caça-Palavras">
-        <div class="canvas-wrapper">
-          <canvas id="grid-canvas"></canvas>
-          <canvas id="lines-canvas"></canvas>
-          <canvas id="drag-canvas"></canvas>
-        </div>
-      </section>
-
-      <aside class="sidebar">
-        <div class="card">
-          <div class="status-panel">
-            <div class="status-item">
-              <div class="status-label">Tempo</div>
-              <div class="status-value" id="timer" aria-live="polite">00:00</div>
-            </div>
-          </div>
-          <div class="actions">
-            <div class="btn-row">
-              <button id="btn-hint" class="btn-secondary">Revelar Palavra</button>
-              <button id="btn-restart" class="btn-primary">Embaralhar</button>
-            </div>
-            <div class="btn-row">
-              <button id="btn-print" class="btn-outline">Imprimir</button>
-              <button id="btn-print-answers-inline" class="btn-outline">Imprimir Gabarito</button>
-            </div>
-            <div class="btn-row">
-              <button id="btn-pdf" class="btn-outline">Salvar PDF</button>
-            </div>
-            <button id="btn-edit" class="btn-outline w-full" style="margin-top: 0.5rem;">Editar Jogo</button>
-          </div>
-        </div>
-
-        <div class="card word-list-card">
-          <h2>Encontrar <span class="print-hidden">(<span id="found-count">0</span>/<span id="total-count">0</span>)</span></h2>
-          <ul class="word-list" id="word-list-ui" aria-label="Lista de Palavras a Encontrar"></ul>
-        </div>
-      </aside>
-    </div>
-  </main>
-
-  <footer>
-    <p id="footer-watermark"></p>
-  </footer>
-
-  <!-- Modal de Vitória -->
-  <div class="modal" id="win-modal" aria-hidden="true">
-    <div class="modal-content">
-      <h2>Parabéns! 🎉</h2>
-      <p>Você encontrou todas as palavras!</p>
-      <div class="actions" style="gap: 0.5rem;">
-        <button class="btn-primary w-full" id="btn-print-answers">Imprimir Gabarito</button>
-        <button class="btn-secondary w-full" id="btn-pdf-answers">Salvar PDF (Gabarito)</button>
-        <div class="btn-row">
-          <button class="btn-outline" id="btn-play-again">Embaralhar Novo</button>
-          <button class="btn-outline" id="btn-new-game-modal">Criar Novo</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Dados estruturados (Schema.org): só descrevem o que a ferramenta realmente oferece -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://eliseuangelos.github.io/caca-palavras/#website",
+        "url": "https://eliseuangelos.github.io/caca-palavras/",
+        "name": "Gerador de Caça-Palavras",
+        "inLanguage": "pt-BR",
+        "publisher": { "@id": "https://eliseuangelos.github.io/#pessoa" }
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://eliseuangelos.github.io/caca-palavras/#aplicativo",
+        "name": "Gerador de Caça-Palavras",
+        "url": "https://eliseuangelos.github.io/caca-palavras/",
+        "description": "Ferramenta gratuita para criar, personalizar e imprimir caça-palavras: jogo individual, revistas de passatempo com até 50 jogos e páginas de atividades em PDF A4.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Qualquer sistema com navegador moderno",
+        "browserRequirements": "Requer JavaScript",
+        "inLanguage": "pt-BR",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+        "featureList": [
+          "Jogo individual com cronômetro, dicas e gabarito",
+          "Matrizes de 10x10, 15x15 e 20x20",
+          "Escolha das direções das palavras",
+          "Revistas com até 50 caça-palavras e gabaritos em PDF",
+          "Página de atividade A4 horizontal com texto personalizado",
+          "Efeito visual e toque sonoro de vitória ao concluir o jogo",
+          "Exportação em PDF e impressão"
+        ],
+        "author": { "@id": "https://eliseuangelos.github.io/#pessoa" },
+        "creator": { "@id": "https://eliseuangelos.github.io/#pessoa" },
+        "isPartOf": { "@id": "https://eliseuangelos.github.io/caca-palavras/#website" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://eliseuangelos.github.io/#pessoa",
+        "name": "Eliseu Fernandes Laurindo",
+        "url": "https://eliseuangelos.github.io",
+        "sameAs": ["https://github.com/eliseuangelos"]
+      }
+    ]
+  }
+  </script>
 
   <script>
-    let generationMeta = { dateBR: "", dateISO: "", host: "" };
-    let printModeState = null; // 'normal' ou 'answer'
-
-    const THEMES = {
-      animais: { name: "Animais", words: ["Cachorro", "Gato", "Cavalo", "Tigre", "Leão", "Urso", "Macaco", "Cobra", "Sapo", "Peixe", "Baleia", "Tubarão", "Golfinho", "Tartaruga", "Coelho", "Rato", "Pássaro", "Águia", "Coruja", "Pato", "Peru", "Porco", "Ovelha", "Cabra", "Vaca", "Galinha", "Lobo", "Raposa", "Cervo", "Girafa", "Zebra", "Elefante", "Jacaré", "Iguana", "Camaleão", "Formiga", "Abelha", "Mosca", "Aranha", "Lagosta", "Lula", "Polvo", "Onça", "Pantera", "Leopardo", "Chita", "Hiena", "Gazela", "Anta", "Capivara", "Tamanduá", "Tatu", "Lontra", "Castor", "Esquilo", "Marmota", "Guaxinim", "Gambá", "Doninha", "Furão", "Coala", "Canguru", "Panda", "Gorila", "Chimpanzé", "Babuíno", "Lêmure", "Preguiça", "Morsa", "Foca", "Narval", "Orca", "Pinguim", "Flamingo", "Pelicano", "Cegonha", "Garça", "Pavão", "Canário", "Sabiá", "Tucano", "Arara", "Papagaio", "Pica-pau", "Beija-flor", "Avestruz", "Condor", "Falcão", "Carcará", "Cisne", "Ganso", "Marreco", "Codorna", "Faisão", "Salamandra", "Lagarto", "Lagartixa", "Texugo", "Búfalo", "Bode"] },
-      geografia: { name: "Geografia", words: ["Mapa", "Globo", "País", "Estado", "Cidade", "Oceano", "Lago", "Montanha", "Vulcão", "Deserto", "Floresta", "Clima", "Relevo", "Planalto", "Planície", "Ilha", "Península", "Latitude", "Longitude", "Norte", "Leste", "Oeste", "Equador", "Trópico", "Polo", "Geleira", "Vale", "Colina", "Serra", "Cânion", "Caverna", "Delta", "Estuário", "Baía", "Golfo", "Enseada", "Praia", "Costa", "Litoral", "Fronteira", "Região", "Território", "Distrito", "Município", "Capital", "Aldeia", "Vila", "Continente", "Hemisfério", "Meridiano", "Paralelo", "Altitude", "Bússola", "Rosa", "Rota", "Estrada", "Rodovia", "Ponte", "Túnel", "Canal", "Represa", "Barragem", "Nascente", "Margem", "Bacia", "Riacho", "Córrego", "Cachoeira", "Oásis", "Duna", "Savana", "Estepe", "Tundra", "Taiga", "Pântano", "Mangue", "Recife", "Atol", "Penhasco", "Falésia", "Fiorde", "Baixada", "Chapada", "Sertão", "Caatinga", "Pampa", "Amazônia", "Cerrado", "Pantanal", "Escala", "Legenda", "Coordenada", "Paisagem", "Ribeira", "Divisa", "Outeiro", "Terreno", "Divisor", "Geodésia", "Geologia"] },
-      educacao: { name: "Educação", words: ["Escola", "Aluno", "Professor", "Ensino", "Estudo", "Livro", "Caderno", "Caneta", "Lápis", "Borracha", "Quadro", "Sala", "Prova", "Exame", "Nota", "Diploma", "Colégio", "Faculdade", "Leitura", "Escrita", "História", "Ciências", "Arte", "Música", "Recreio", "Tarefa", "Merenda", "Lancheira", "Diretoria", "Biblioteca", "Pesquisa", "Aula", "Curso", "Turma", "Classe", "Projeto", "Trabalho", "Debate", "Resumo", "Texto", "Página", "Capítulo", "Matéria", "Disciplina", "Geografia", "Biologia", "Química", "Física", "Literatura", "Gramática", "Redação", "Desenho", "Pintura", "Teatro", "Dança", "Esporte", "Oficina", "Cálculo", "Equação", "Número", "Dicionário", "Atlas", "Globo", "Mapa", "Agenda", "Mochila", "Estojo", "Régua", "Tesoura", "Cola", "Cartaz", "Papel", "Folha", "Pasta", "Arquivo", "Computador", "Teclado", "Internet", "Seminário", "Palestra", "Reunião", "Calendário", "Horário", "Intervalo", "Refeitório", "Pátio", "Ginásio", "Auditório", "Secretaria", "Direção", "Monitor", "Estágio", "Formatura", "Mentoria", "Didática", "Apostila", "Avaliação", "Formação", "Aprendiz", "Estudante"] },
-      alimentos: { name: "Alimentos", words: ["Arroz", "Feijão", "Carne", "Frango", "Peixe", "Leite", "Queijo", "Manteiga", "Bolo", "Doce", "Salgado", "Sopa", "Salada", "Macarrão", "Pizza", "Batata", "Cenoura", "Tomate", "Cebola", "Alho", "Açúcar", "Café", "Suco", "Água", "Biscoito", "Sorvete", "Iogurte", "Aveia", "Milho", "Ervilha", "Lentilha", "Grão", "Farinha", "Fubá", "Tapioca", "Cuscuz", "Quibe", "Pastel", "Torta", "Pudim", "Gelatina", "Mousse", "Brigadeiro", "Paçoca", "Pipoca", "Amendoim", "Castanha", "Amêndoa", "Avelã", "Maçã", "Banana", "Pera", "Manga", "Mamão", "Abacaxi", "Melão", "Melancia", "Morango", "Cereja", "Goiaba", "Caju", "Limão", "Laranja", "Maracujá", "Acerola", "Abacate", "Coco", "Beterraba", "Alface", "Couve", "Brócolis", "Pepino", "Abóbora", "Chuchu", "Quiabo", "Rabanete", "Berinjela", "Vagem", "Mandioca", "Inhame", "Pimenta", "Canela", "Cravo", "Orégano", "Manjericão", "Baunilha", "Farofa", "Molho", "Tempero", "Caldo", "Creme", "Requeijão", "Tofu", "Granola", "Ameixa", "Azeitona", "Pistache", "Ricota", "Bebida", "Vitamina"] },
-      esportes: { name: "Esportes", words: ["Futebol", "Vôlei", "Basquete", "Tênis", "Natação", "Corrida", "Salto", "Ginástica", "Judô", "Karatê", "Boxe", "Surfe", "Skate", "Ciclismo", "Remo", "Golfe", "Rugby", "Beisebol", "Atletismo", "Xadrez", "Dardos", "Esgrima", "Handebol", "Peteca", "Capoeira", "Arco", "Trilha", "Caminhada", "Escalada", "Patinação", "Hóquei", "Badminton", "Triatlo", "Maratona", "Canoagem", "Hipismo", "Boliche", "Sinuca", "Bilhar", "Pesca", "Mergulho", "Iatismo", "Vela", "Raquete", "Bola", "Rede", "Quadra", "Campo", "Pista", "Arena", "Time", "Equipe", "Atleta", "Treino", "Técnico", "Juiz", "Árbitro", "Ponto", "Placar", "Medalha", "Troféu", "Taça", "Campeão", "Torneio", "Jogo", "Partida", "Rodada", "Final", "Etapa", "Prova", "Largada", "Chegada", "Volta", "Tempo", "Recorde", "Marca", "Força", "Velocidade", "Equilíbrio", "Agilidade", "Precisão", "Passe", "Chute", "Saque", "Bloqueio", "Drible", "Defesa", "Ataque", "Arremesso", "Rebote", "Sprint", "Pódio", "Camisa", "Chuteira", "Capacete", "Bicicleta", "Prancha", "Apito", "Cronômetro", "Uniforme"] },
-      natureza: { name: "Natureza", words: ["Árvore", "Flor", "Folha", "Raiz", "Semente", "Grama", "Terra", "Pedra", "Areia", "Água", "Fogo", "Vento", "Chuva", "Estrela", "Nuvem", "Neve", "Gelo", "Raios", "Trovão", "Animal", "Planta", "Mato", "Campo", "Jardim", "Bosque", "Floresta", "Montanha", "Lago", "Oceano", "Praia", "Cachoeira", "Córrego", "Riacho", "Ilha", "Vulcão", "Deserto", "Vale", "Serra", "Colina", "Caverna", "Duna", "Pântano", "Mangue", "Recife", "Atol", "Cristal", "Mineral", "Rocha", "Cascalho", "Argila", "Barro", "Musgo", "Bambu", "Palmeira", "Pinheiro", "Cedro", "Jasmim", "Rosa", "Tulipa", "Orquídea", "Girassol", "Lírio", "Margarida", "Hortênsia", "Bromélia", "Cacto", "Samambaia", "Trevo", "Erva", "Baga", "Fruto", "Pétala", "Galho", "Tronco", "Caule", "Broto", "Pólen", "Néctar", "Seiva", "Floração", "Colmeia", "Ninho", "Concha", "Coral", "Maré", "Onda", "Espuma", "Brisa", "Geada", "Orvalho", "Neblina", "Aurora", "Horizonte", "Sombra", "Eclipse", "Planeta", "Carvalho", "Acácia", "Arbusto", "Salgueiro"] },
-      tecnologia: { name: "Tecnologia", words: ["Celular", "Tablet", "Internet", "Rede", "Dados", "Sistema", "Software", "Hardware", "Tela", "Teclado", "Mouse", "Cabo", "Bateria", "Câmera", "Foto", "Vídeo", "Jogo", "Site", "Código", "Programa", "Virtual", "Digital", "Robô", "Drone", "Nuvem", "Arquivo", "Link", "Senha", "Login", "Conta", "Servidor", "Banco", "Memória", "Monitor", "Impressora", "Scanner", "Fone", "Áudio", "Microfone", "Roteador", "Modem", "Antena", "Satélite", "Sensor", "Chip", "Placa", "Circuito", "Fonte", "Tecla", "Janela", "Ícone", "Menu", "Botão", "Pasta", "Documento", "Imagem", "Texto", "Navegador", "Pesquisa", "Aplicativo", "Versão", "Página", "Endereço", "Domínio", "Portal", "Blogue", "Email", "Mensagem", "Chat", "Canal", "Console", "Controle", "Joystick", "Mousepad", "Carregador", "Adaptador", "Conector", "Tomada", "Energia", "Pixel", "Lente", "Foco", "Flash", "Filtro", "Editor", "Gráfico", "Planilha", "Backup", "Download", "Upload", "Bluetooth", "WiFi", "Tecnologia", "Firewall", "Navegação", "Algoritmo", "Interface", "Plataforma", "Conexão", "Antivírus"] },
-      cotidiano: { name: "Cotidiano", words: ["Casa", "Carro", "Ônibus", "Trabalho", "Dinheiro", "Compra", "Venda", "Loja", "Mercado", "Banco", "Conta", "Relógio", "Hora", "Noite", "Semana", "Roupa", "Sapato", "Cama", "Mesa", "Cadeira", "Porta", "Janela", "Banho", "Sono", "Fome", "Sede", "Cozinha", "Quarto", "Sala", "Garagem", "Jardim", "Quintal", "Varanda", "Telhado", "Parede", "Piso", "Escada", "Chave", "Bolsa", "Carteira", "Mochila", "Toalha", "Sabonete", "Escova", "Espelho", "Prato", "Copo", "Talher", "Panela", "Fogão", "Forno", "Geladeira", "Armário", "Sofá", "Tapete", "Cortina", "Lâmpada", "Tomada", "Telefone", "Agenda", "Calendário", "Alarme", "Viagem", "Passeio", "Praça", "Parque", "Feira", "Farmácia", "Padaria", "Esquina", "Avenida", "Calçada", "Semáforo", "Bicicleta", "Moto", "Caminhão", "Táxi", "Metrô", "Trem", "Ingresso", "Cinema", "Música", "Filme", "Foto", "Festa", "Presente", "Família", "Amigo", "Vizinho", "Tarefa", "Descanso", "Rotina", "Manhã", "Tarde", "Almoço", "Jantar", "Café", "Lanche", "Receita", "Toalete"] },
-      portugues: { name: "Português", words: ["Alfabeto", "Vogal", "Consoante", "Sílaba", "Palavra", "Frase", "Texto", "Verbo", "Nome", "Adjetivo", "Pronome", "Sujeito", "Ponto", "Vírgula", "Acento", "Plural", "Singular", "Sinônimo", "Antônimo", "Rimar", "Poema", "Conto", "Letra", "Parágrafo", "Leitura", "Escrita", "Redação", "Gramática", "Ortografia", "Dicionário", "Fábula", "História", "Narrativa", "Personagem", "Título", "Autor", "Verso", "Estrofe", "Rima", "Prosa", "Diálogo", "Discurso", "Pergunta", "Resposta", "Ideia", "Tema", "Assunto", "Sentido", "Fraseado", "Símbolo", "Sinal", "Página", "Capítulo", "Livro", "Revista", "Jornal", "Carta", "Bilhete", "Aviso", "Convite", "Receita", "Notícia", "Crônica", "Biografia", "Lenda", "Mito", "Ficção", "Leitor", "Escritor", "Narrador", "Cenário", "Enredo", "Ação", "Tempo", "Lugar", "Advérbio", "Artigo", "Preposição", "Conjunção", "Numeral", "Predicado", "Objeto", "Acentuação", "Pontuação", "Caligrafia", "Expressão", "Pronúncia", "Sotaque", "Idioma", "Língua", "Português", "Fonema", "Morfema", "Sujeição", "Regência", "Semântica", "Fonologia", "Vocativo", "Prefixo", "Sufixo"] },
-      ingles: { name: "Inglês", words: ["Hello", "Goodbye", "Please", "Thanks", "Welcome", "Sorry", "Blue", "Green", "Black", "White", "House", "Book", "Water", "Food", "Time", "Night", "Friend", "Happy", "Small", "Large", "Table", "Chair", "Window", "School", "Teacher", "Student", "Family", "Mother", "Father", "Brother", "Sister", "Morning", "Evening", "Today", "Tomorrow", "Summer", "Winter", "Spring", "Autumn", "Apple", "Banana", "Orange", "Grape", "Lemon", "Peach", "Cherry", "Garden", "Flower", "Tree", "River", "Mountain", "Ocean", "Beach", "Cloud", "Rain", "Snow", "Wind", "Moon", "Star", "Music", "Movie", "Game", "Sport", "Ball", "Team", "Player", "Coach", "Goal", "Point", "Match", "Race", "Jump", "Swim", "Dance", "Read", "Write", "Speak", "Listen", "Learn", "Study", "Work", "Play", "Open", "Close", "Start", "Finish", "Kind", "Brave", "Clean", "Quiet", "Strong", "Young", "Bright", "Brown", "Purple", "Yellow", "English", "Bread", "Clock", "Phone"] },
-      profissoes: { name: "Profissões", words: ["Médico", "Advogado", "Pintor", "Pedreiro", "Chefe", "Policial", "Bombeiro", "Juiz", "Dentista", "Piloto", "Motorista", "Ator", "Cantor", "Escritor", "Carteiro", "Padeiro", "Feirante", "Caixa", "Gerente", "Diretor", "Professor", "Enfermeiro", "Cozinheiro", "Garçom", "Garçonete", "Barbeiro", "Costureiro", "Encanador", "Mecânico", "Marceneiro", "Jardineiro", "Agricultor", "Pescador", "Artesão", "Fotógrafo", "Jornalista", "Repórter", "Designer", "Analista", "Arquiteto", "Engenheiro", "Contador", "Secretário", "Vendedor", "Atendente", "Entregador", "Cientista", "Químico", "Biólogo", "Físico", "Geógrafo", "Músico", "Dançarino", "Produtor", "Editor", "Locutor", "Radialista", "Ilustrador", "Animador", "Escultor", "Ceramista", "Ourives", "Joalheiro", "Sapateiro", "Agrônomo", "Florista", "Paisagista", "Apicultor", "Criador", "Treinador", "Árbitro", "Árbitra", "Atleta", "Instrutor", "Guia", "Turismo", "Operador", "Técnico", "Auxiliar", "Supervisor", "Empresário", "Profissão", "Consultor", "Fotógrafa", "Economista", "Geólogo", "Odontólogo", "Pedagogo", "Revisor", "Roteirista", "Terapeuta", "Tradutor", "Vidraceiro", "Vitrinista", "Zelador", "Açougueiro", "Astrônomo", "Arqueólogo", "Boticário", "Cobrador"] },
-      corpo: { name: "Corpo Humano", words: ["Cabeça", "Cabelo", "Olho", "Orelha", "Nariz", "Boca", "Dente", "Língua", "Pescoço", "Ombro", "Braço", "Dedo", "Unha", "Peito", "Barriga", "Costas", "Perna", "Joelho", "Coração", "Pulmão", "Sangue", "Osso", "Pele", "Músculo", "Cérebro", "Veia", "Artéria", "Cotovelo", "Punho", "Quadril", "Coxa", "Canela", "Calcanhar", "Tornozelo", "Nádega", "Queixo", "Bochecha", "Testa", "Cílio", "Pálpebra", "Garganta", "Estômago", "Fígado", "Intestino", "Pâncreas", "Baço", "Crânio", "Costela", "Coluna", "Vértebra", "Tendão", "Ligamento", "Cartilagem", "Nervo", "Célula", "Tecido", "Pupila", "Íris", "Palato", "Gengiva", "Lábio", "Amígdala", "Esôfago", "Traqueia", "Brônquio", "Diafragma", "Pulsação", "Respiração", "Batimento", "Digestão", "Memória", "Equilíbrio", "Postura", "Movimento", "Força", "Energia", "Sentido", "Tato", "Visão", "Audição", "Olfato", "Paladar", "Suor", "Lágrima", "Saliva", "Barba", "Bigode", "Pelos", "Corpo", "Humano", "Faringe", "Laringe", "Uretra", "Bexiga", "Tímpano", "Tórax", "Abdômen", "Pelvis", "Medula", "Retina"] },
-      paises: { name: "Países e Capitais", words: ["Brasil", "Argentina", "Chile", "Peru", "Colômbia", "México", "Canadá", "Portugal", "Espanha", "França", "Itália", "Alemanha", "Rússia", "China", "Japão", "Índia", "Egito", "Angola", "Bolívia", "Paraguai", "Uruguai", "Equador", "Venezuela", "Guiana", "Suriname", "Panamá", "Honduras", "Nicarágua", "Guatemala", "Belize", "Cuba", "Haiti", "Jamaica", "Bahamas", "Islândia", "Noruega", "Suécia", "Finlândia", "Dinamarca", "Irlanda", "Bélgica", "Holanda", "Suíça", "Áustria", "Polônia", "Ucrânia", "Turquia", "Grécia", "Marrocos", "Argélia", "Tunísia", "Quênia", "Nigéria", "Gana", "Senegal", "Etiópia", "Namíbia", "Austrália", "Zelândia", "Coreia", "Mongólia", "Nepal", "Butão", "Vietnã", "Tailândia", "Malásia", "Indonésia", "Filipinas", "Cingapura", "Paquistão", "Iraque", "Israel", "Jordânia", "Líbano", "Síria", "Emirados", "Catar", "Iêmen", "Kuwait", "Brasília", "Buenos", "Santiago", "Lima", "Bogotá", "Caracas", "Quito", "Assunção", "Montevidéu", "Cidade", "Ottawa", "Lisboa", "Madri", "Paris", "Roma", "Berlim", "Moscou", "Pequim", "Tóquio", "Delhi", "Cairo"] },
-      frutas: { name: "Frutas e Vegetais", words: ["Maçã", "Banana", "Pera", "Melancia", "Melão", "Mamão", "Abacaxi", "Morango", "Cereja", "Kiwi", "Manga", "Goiaba", "Caju", "Limão", "Laranja", "Tomate", "Batata", "Cenoura", "Cebola", "Alho", "Alface", "Couve", "Brócolis", "Pepino", "Pimentão", "Chuchu", "Abóbora", "Abacate", "Acerola", "Ameixa", "Amora", "Framboesa", "Mirtilo", "Pêssego", "Nectarina", "Romã", "Tangerina", "Mexerica", "Maracujá", "Pitanga", "Jabuticaba", "Carambola", "Graviola", "Cupuaçu", "Açaí", "Pitaya", "Figo", "Damasco", "Caqui", "Fruta", "Milho", "Ervilha", "Feijão", "Lentilha", "Mandioca", "Inhame", "Quiabo", "Vagem", "Berinjela", "Rabanete", "Beterraba", "Espinafre", "Agrião", "Rúcula", "Repolho", "Couve-flor", "Aipo", "Salsão", "Nabo", "Maxixe", "Jiló", "Alcachofra", "Aspargo", "Alho-poró", "Endívia", "Mostarda", "Manjericão", "Salsinha", "Coentro", "Hortelã", "Alecrim", "Tomilho", "Orégano", "Cebolinha", "Coco", "Castanha", "Amendoim", "Avelã", "Amêndoa", "Pistache", "Azeitona", "Tâmara", "Dátil", "Tamarindo", "Frutas", "Vegetal", "Atemoia", "Physalis", "Mangaba", "Seriguela"] },
-      cores: { name: "Cores", words: ["Branco", "Preto", "Cinza", "Vermelho", "Azul", "Amarelo", "Verde", "Laranja", "Roxo", "Rosa", "Marrom", "Bege", "Lilás", "Violeta", "Dourado", "Prata", "Bronze", "Turquesa", "Carmim", "Magenta", "Ciano", "Índigo", "Escarlate", "Coral", "Creme", "Ocre", "Âmbar", "Ametista", "Lavanda", "Oliva", "Caqui", "Sépia", "Pêssego", "Salmão", "Bordô", "Mostarda", "Cobre", "Grafite", "Pérola", "Marfim", "Caramelo", "Terracota", "Fúcsia", "Anil", "Avelã", "Areia", "Gelo", "Neve", "Fumê", "Rubi", "Safira", "Esmeralda", "Jade", "Topázio", "Ouro", "Aqua", "Celeste", "Canela", "Fendi", "Íris", "Menta", "Opala", "Púrpura", "Rosa-claro", "Rubro", "Siena", "Açafrão", "Alabastro", "Ameixa", "Amêndoa", "Azulão", "Baunilha", "Beterraba", "Carvão", "Cereja", "Chocolate", "Cinábrio", "Damasco", "Goiaba", "Granito", "Hortelã", "Jacinto", "Limão", "Malva", "Melancia", "Musgo", "Pistache", "Tangerina", "Ardósia", "Borgonha", "Cobreado", "Dália", "Fumaça", "Lacre", "Nácar", "Platina", "Rubor", "Rosa-choque", "Verde-água"] },
-      virtudes: { name: "Virtudes e Valores", words: ["Amor", "Alegria", "Bondade", "Justiça", "Verdade", "Coragem", "Respeito", "Empatia", "Perdão", "Gratidão", "Esperança", "Paciência", "Humildade", "Honesto", "Caridade", "Doçura", "Sabedoria", "Amizade", "União", "Pureza", "Cortesia", "Lealdade", "Gentileza", "Confiança", "Atenção", "Cuidado", "Calma", "Serenidade", "Prudência", "Disciplina", "Dedicação", "Esforço", "Educação", "Compaixão", "Tolerância", "Harmonia", "Equilíbrio", "Justeza", "Honra", "Mérito", "Talento", "Habilidade", "Firmeza", "Cooperação", "Parceria", "Ajuda", "Apoio", "Amparo", "Escuta", "Diálogo", "Acolhida", "Modéstia", "Mansidão", "Delicadeza", "Otimismo", "Ânimo", "Vigor", "Vitalidade", "Saúde", "Civismo", "Coerência", "Ética", "Caráter", "Zelo", "Capricho", "Brilho", "Valor", "Dignidade", "Autonomia", "Iniciativa", "Liderança", "Conquista", "Superação", "Vitória", "Altruísmo", "Bravura", "Clareza", "Conselho", "Discrição", "Equidade", "Fidelidade", "Foco", "Honradez", "Inovação", "Liberdade", "Maturidade", "Motivação", "Nobreza", "Ponderação", "Qualidade", "Realização", "Retidão", "Seriedade", "Suavidade", "Valentia", "Veracidade", "Moderação", "Ternura", "Abnegação", "Zeloso"] }
-    };
-
-    class TimerManager {
-      constructor(onTick) {
-        this.seconds = 0;
-        this.timerId = null;
-        this.onTick = onTick;
+    /* Executa antes da pintura: marca que há JavaScript e aplica o tema salvo (ou o do sistema), sem "piscar".
+       A chave "ed-theme" é a mesma do site pessoal (mesma origem em eliseuangelos.github.io): a escolha vale nos dois. */
+    (function () {
+      var d = document.documentElement, C = { light: '#F4F7FB', dark: '#111C28' }, t = null, i, m;
+      d.classList.add('js');
+      try { t = localStorage.getItem('ed-theme'); } catch (e) { t = null; }
+      if (t !== 'light' && t !== 'dark') {
+        t = null;
+        try { var old = localStorage.getItem('cpg:tema'); t = old === 'escuro' ? 'dark' : (old === 'claro' ? 'light' : null); } catch (e) { t = null; }   // versão anterior do gerador
       }
-      start() {
-        this.reset();
-        this.timerId = setInterval(() => {
-          this.seconds++;
-          this.onTick(this.formatTime(this.seconds));
-        }, 1000);
-      }
-      stop() {
-        if (this.timerId) clearInterval(this.timerId);
-      }
-      reset() {
-        this.stop();
-        this.seconds = 0;
-        this.onTick(this.formatTime(0));
-      }
-      formatTime(sec) {
-        const m = Math.floor(sec / 60).toString().padStart(2, '0');
-        const s = (sec % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
-      }
-    }
-
-    const DIRECTIONS = [
-      [-1, -1], [-1, 0], [-1, 1], // Noroeste, Norte, Nordeste
-      [0, -1],           [0, 1],  // Oeste, Leste
-      [1, -1],  [1, 0],  [1, 1]   // Sudoeste, Sul, Sudeste
-    ];
-
-    class WordSearchGame {
-      constructor() {
-        this.gridSize = 15;
-        this.words = [];
-        this.grid = [];
-        this.placedWords = [];
-        this.foundWords = new Set();
-        
-        this.gridCanvas = document.getElementById('grid-canvas');
-        this.linesCanvas = document.getElementById('lines-canvas');
-        this.dragCanvas = document.getElementById('drag-canvas');
-        this.ctxGrid = this.gridCanvas.getContext('2d');
-        this.ctxLines = this.linesCanvas.getContext('2d');
-        this.ctxDrag = this.dragCanvas.getContext('2d');
-        
-        this.isDragging = false;
-        this.startCell = null;
-        this.currentCell = null;
-        this.cellSize = 0;
-
-        this.timerMgr = new TimerManager(
-          timeStr => document.getElementById('timer').textContent = timeStr
-        );
-
-        this.setupEventListeners();
-      }
-
-      start(wordsList, size) {
-        this.gridSize = size;
-        this.words = wordsList;
-        this.init();
-      }
-
-      init() {
-        document.getElementById('win-modal').classList.remove('active');
-        this.foundWords.clear();
-        
-        try {
-          this.generateMatrixWithRetry();
-        } catch (error) {
-          throw error;
-        }
-        
-        UI.renderWordList(this.placedWords);
-        setTimeout(() => this.resizeCanvases(), 50);
-        this.timerMgr.start();
-      }
-
-      generateMatrixWithRetry() {
-        const maxRetries = 100;
-        for (let i = 0; i < maxRetries; i++) {
-          if (this.tryGenerateMatrix()) return true;
-        }
-        throw new Error("Não foi possível posicionar todas as palavras nesta matriz. Tente aumentar o tamanho do quadro ou reduzir a quantidade de palavras.");
-      }
-
-      tryGenerateMatrix() {
-        this.grid = Array(this.gridSize).fill(null).map(() => Array(this.gridSize).fill(''));
-        this.placedWords = [];
-        
-        const sortedWords = [...this.words].sort((a, b) => b.clean.length - a.clean.length);
-
-        for (let wordObj of sortedWords) {
-          const word = wordObj.clean;
-          let placed = false;
-          let attempts = 0;
-
-          while (!placed && attempts < 200) {
-            attempts++;
-            const dir = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
-            const startRow = Math.floor(Math.random() * this.gridSize);
-            const startCol = Math.floor(Math.random() * this.gridSize);
-
-            if (this.canPlaceWord(word, startRow, startCol, dir)) {
-              const cells = [];
-              for (let i = 0; i < word.length; i++) {
-                const r = startRow + dir[0] * i;
-                const c = startCol + dir[1] * i;
-                this.grid[r][c] = word[i];
-                cells.push({ r, c });
-              }
-              this.placedWords.push({
-                ...wordObj,
-                id: `word_${this.placedWords.length}`,
-                cells,
-                start: cells[0],
-                end: cells[cells.length - 1]
-              });
-              placed = true;
-            }
-          }
-          if (!placed) return false; 
-        }
-
-        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        for (let r = 0; r < this.gridSize; r++) {
-          for (let c = 0; c < this.gridSize; c++) {
-            if (!this.grid[r][c]) {
-              this.grid[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
-            }
-          }
-        }
-        return true;
-      }
-
-      canPlaceWord(word, r, c, dir) {
-        for (let i = 0; i < word.length; i++) {
-          const nr = r + dir[0] * i;
-          const nc = c + dir[1] * i;
-          if (nr < 0 || nr >= this.gridSize || nc < 0 || nc >= this.gridSize) return false;
-          if (this.grid[nr][nc] !== '' && this.grid[nr][nc] !== word[i]) return false;
-        }
-        return true;
-      }
-
-      resizeCanvases() {
-        const wrapper = this.gridCanvas.parentElement;
-        const rect = wrapper.getBoundingClientRect();
-        const dpr = window.devicePixelRatio || 1;
-
-        [this.gridCanvas, this.linesCanvas, this.dragCanvas].forEach(canvas => {
-          canvas.width = rect.width * dpr;
-          canvas.height = rect.height * dpr;
-          const ctx = canvas.getContext('2d');
-          ctx.scale(dpr, dpr);
-        });
-
-        this.cellSize = rect.width / this.gridSize;
-        this.drawGrid();
-        this.redrawFoundLines();
-      }
-
-      drawGrid() {
-        this.ctxGrid.clearRect(0, 0, this.gridCanvas.width, this.gridCanvas.height);
-        this.ctxGrid.textAlign = 'center';
-        this.ctxGrid.textBaseline = 'middle';
-        this.ctxGrid.font = `600 ${this.cellSize * 0.55}px system-ui, sans-serif`;
-        this.ctxGrid.fillStyle = '#1e293b';
-
-        for (let r = 0; r < this.gridSize; r++) {
-          for (let c = 0; c < this.gridSize; c++) {
-            const x = c * this.cellSize + this.cellSize / 2;
-            const y = r * this.cellSize + this.cellSize / 2;
-            this.ctxGrid.fillText(this.grid[r][c], x, y);
-          }
-        }
-      }
-
-      drawLine(ctx, start, end, color) {
-        const x1 = start.c * this.cellSize + this.cellSize / 2;
-        const y1 = start.r * this.cellSize + this.cellSize / 2;
-        const x2 = end.c * this.cellSize + this.cellSize / 2;
-        const y2 = end.r * this.cellSize + this.cellSize / 2;
-
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = this.cellSize * 0.7;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-      }
-
-      redrawFoundLines() {
-        this.ctxLines.clearRect(0, 0, this.linesCanvas.width, this.linesCanvas.height);
-        this.placedWords.forEach(pw => {
-          if (this.foundWords.has(pw.id)) {
-            this.drawLine(this.ctxLines, pw.start, pw.end, 'rgba(34, 197, 94, 0.5)');
-          }
-        });
-      }
-
-      drawAllAnswers() {
-        this.ctxLines.clearRect(0, 0, this.linesCanvas.width, this.linesCanvas.height);
-        this.placedWords.forEach(pw => {
-          this.drawLine(this.ctxLines, pw.start, pw.end, 'rgba(34, 197, 94, 0.5)');
-        });
-      }
-
-      setupEventListeners() {
-        window.addEventListener('resize', () => {
-           if (!document.getElementById('game-screen').classList.contains('hidden')) {
-               this.resizeCanvases();
-           }
-        });
-
-        const wrapper = this.gridCanvas.parentElement;
-
-        wrapper.addEventListener('pointerdown', (e) => {
-          if(document.body.classList.contains('print-answer') || document.body.classList.contains('print-normal')) return;
-          this.isDragging = true;
-          this.startCell = this.getCellFromEvent(e);
-          this.currentCell = this.startCell;
-        });
-
-        wrapper.addEventListener('pointermove', (e) => {
-          if (!this.isDragging) return;
-          const newCell = this.getCellFromEvent(e);
-          if (!this.currentCell || newCell.r !== this.currentCell.r || newCell.c !== this.currentCell.c) {
-            this.currentCell = this.alignCellTo8Directions(this.startCell, newCell);
-            this.ctxDrag.clearRect(0, 0, this.dragCanvas.width, this.dragCanvas.height);
-            if (this.currentCell) {
-              this.drawLine(this.ctxDrag, this.startCell, this.currentCell, 'rgba(217, 119, 6, 0.4)');
-            }
-          }
-        });
-
-        window.addEventListener('pointerup', () => {
-          if (!this.isDragging) return;
-          this.isDragging = false;
-          this.ctxDrag.clearRect(0, 0, this.dragCanvas.width, this.dragCanvas.height);
-          if (this.startCell && this.currentCell) {
-            this.checkSelection(this.startCell, this.currentCell);
-          }
-          this.startCell = null;
-          this.currentCell = null;
-        });
-      }
-
-      getCellFromEvent(e) {
-        const rect = this.gridCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const c = Math.floor(Math.max(0, Math.min(x, rect.width - 1)) / this.cellSize);
-        const r = Math.floor(Math.max(0, Math.min(y, rect.height - 1)) / this.cellSize);
-        return { r, c };
-      }
-
-      alignCellTo8Directions(start, current) {
-        const dr = current.r - start.r;
-        const dc = current.c - start.c;
-        if (dr === 0 && dc === 0) return current;
-
-        const angle = Math.atan2(dr, dc);
-        const snapAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
-        const stepR = Math.round(Math.sin(snapAngle));
-        const stepC = Math.round(Math.cos(snapAngle));
-        const maxDist = Math.max(Math.abs(dr), Math.abs(dc));
-
-        return {
-          r: Math.max(0, Math.min(this.gridSize - 1, start.r + stepR * maxDist)),
-          c: Math.max(0, Math.min(this.gridSize - 1, start.c + stepC * maxDist))
-        };
-      }
-
-      checkSelection(start, end) {
-        const found = this.placedWords.find(pw => {
-          if (this.foundWords.has(pw.id)) return false;
-          const matchNormal = (pw.start.r === start.r && pw.start.c === start.c && pw.end.r === end.r && pw.end.c === end.c);
-          const matchReverse = (pw.start.r === end.r && pw.start.c === end.c && pw.end.r === start.r && pw.end.c === start.c);
-          return matchNormal || matchReverse;
-        });
-
-        if (found) {
-          this.foundWords.add(found.id);
-          this.redrawFoundLines();
-          UI.updateWordFound(found.id, this.foundWords.size, this.placedWords.length);
-
-          if (this.foundWords.size === this.placedWords.length) {
-            this.timerMgr.stop();
-            document.getElementById('win-modal').classList.add('active');
-          }
-        }
-      }
-
-      giveHint() {
-        const uncollected = this.placedWords.filter(pw => !this.foundWords.has(pw.id));
-        if (uncollected.length === 0) return;
-
-        const target = uncollected[Math.floor(Math.random() * uncollected.length)];
-        this.foundWords.add(target.id);
-        this.redrawFoundLines();
-        UI.updateWordFound(target.id, this.foundWords.size, this.placedWords.length);
-
-        if (this.foundWords.size === this.placedWords.length) {
-          this.timerMgr.stop();
-          document.getElementById('win-modal').classList.add('active');
-        }
-      }
-    }
-
-    const UI = {
-      showError(msg) {
-        const el = document.getElementById('setup-error');
-        el.textContent = msg;
-        el.classList.remove('hidden');
-      },
-      hideError() {
-        document.getElementById('setup-error').classList.add('hidden');
-      },
-      renderWordList(placedWords) {
-        const container = document.getElementById('word-list-ui');
-        container.innerHTML = '';
-        document.getElementById('total-count').textContent = placedWords.length;
-        document.getElementById('found-count').textContent = 0;
-
-        placedWords.forEach(w => {
-          const li = document.createElement('li');
-          li.className = 'word-item';
-          li.id = `ui-${w.id}`;
-          li.textContent = w.display;
-          container.appendChild(li);
-        });
-      },
-      updateWordFound(id, foundCount, totalCount) {
-        document.getElementById('found-count').textContent = foundCount;
-        const el = document.getElementById(`ui-${id}`);
-        if (el) el.classList.add('found');
-      },
-      sanitizeWord(word) {
-        return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "").toUpperCase();
-      },
-      shuffleArray(array) {
-        let currentIndex = array.length, randomIndex;
-        while (currentIndex !== 0) {
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-        }
-        return array;
-      }
-    };
-
-    let gameInstance = null;
-    let currentMode = 'manual';
-
-    document.addEventListener('DOMContentLoaded', () => {
-      
-      const selectTheme = document.getElementById('auto-theme');
-      Object.entries(THEMES).forEach(([key, theme]) => {
-        const opt = document.createElement('option');
-        opt.value = key;
-        opt.textContent = theme.name;
-        selectTheme.appendChild(opt);
-      });
-
-      const btnManual = document.getElementById('btn-mode-manual');
-      const btnAuto = document.getElementById('btn-mode-auto');
-      const manualFields = document.getElementById('manual-fields');
-      const autoFields = document.getElementById('auto-fields');
-      const titleFields = document.getElementById('title-fields');
-
-      btnManual.addEventListener('click', () => {
-        currentMode = 'manual';
-        btnManual.classList.add('active');
-        btnAuto.classList.remove('active');
-        manualFields.classList.remove('hidden');
-        autoFields.classList.add('hidden');
-        titleFields.classList.remove('hidden');
-        UI.hideError();
-      });
-
-      btnAuto.addEventListener('click', () => {
-        currentMode = 'auto';
-        btnAuto.classList.add('active');
-        btnManual.classList.remove('active');
-        autoFields.classList.remove('hidden');
-        manualFields.classList.add('hidden');
-        titleFields.classList.add('hidden');
-        updateQuantityOptions();
-        UI.hideError();
-      });
-
-      const selectGridSize = document.getElementById('grid-size');
-      const selectQuantity = document.getElementById('auto-quantity');
-
-      function updateQuantityOptions() {
-        const size = selectGridSize.value;
-        const ranges = {
-          "10": { min: 3, max: 7 },
-          "15": { min: 7, max: 15 },
-          "20": { min: 10, max: 20 }
-        };
-        const cfg = ranges[size] || ranges["15"];
-        
-        selectQuantity.innerHTML = '';
-        for (let i = cfg.min; i <= cfg.max; i++) {
-          const opt = document.createElement('option');
-          opt.value = i;
-          opt.textContent = i;
-          if (i === Math.floor((cfg.min + cfg.max) / 2)) opt.selected = true;
-          selectQuantity.appendChild(opt);
-        }
-      }
-      
-      selectGridSize.addEventListener('change', updateQuantityOptions);
-
-      selectTheme.addEventListener('change', () => {
-        if (selectTheme.value) {
-          const themeName = THEMES[selectTheme.value].name;
-          document.getElementById('game-title').value = `Caça-Palavras — ${themeName}`;
-          document.getElementById('game-subtitle').value = `Encontre as palavras relacionadas ao tema ${themeName}.`;
-        }
-      });
-
-      document.getElementById('btn-generate').addEventListener('click', () => {
-        UI.hideError();
-        let wordsList = [];
-        const selectedSize = parseInt(document.getElementById('grid-size').value, 10);
-
-        if (currentMode === 'manual') {
-          for (let i = 1; i <= 10; i++) {
-            const val = document.getElementById(`word-${i}`).value.trim();
-            if (val.length > 0) {
-              const clean = UI.sanitizeWord(val);
-              
-              if (clean.length < 3) {
-                return UI.showError(`A palavra "${val}" é muito curta. Mínimo de 3 caracteres.`);
-              }
-              if (clean.length > selectedSize) {
-                return UI.showError(`A palavra "${val}" possui ${clean.length} caracteres e não cabe em uma matriz ${selectedSize}x${selectedSize}. Selecione uma matriz maior.`);
-              }
-              if (wordsList.some(w => w.clean === clean)) {
-                return UI.showError(`A palavra "${val}" já foi adicionada. Remova palavras duplicadas.`);
-              }
-              
-              wordsList.push({ display: val.toUpperCase(), clean });
-            }
-          }
-          if (wordsList.length < 3) return UI.showError("Insira pelo menos 3 palavras.");
-          
-        } else {
-          const themeKey = selectTheme.value;
-          if (!themeKey) return UI.showError("Selecione um tema válido.");
-          
-          const themeName = THEMES[themeKey].name;
-          document.getElementById('game-title').value = `Caça-Palavras — ${themeName}`;
-          document.getElementById('game-subtitle').value = `Encontre as palavras relacionadas ao tema ${themeName}.`;
-          
-          const qty = parseInt(selectQuantity.value, 10);
-          const themeWords = THEMES[themeKey].words.filter(w => UI.sanitizeWord(w).length <= selectedSize);
-          
-          if (themeWords.length < qty) {
-            return UI.showError(`O tema "${THEMES[themeKey].name}" não possui ${qty} palavras que caibam na matriz ${selectedSize}x${selectedSize}. Aumente o quadro ou reduza a quantidade.`);
-          }
-          
-          const shuffled = UI.shuffleArray([...themeWords]);
-          const selected = shuffled.slice(0, qty);
-          
-          wordsList = selected.map(w => ({
-            display: w.toUpperCase(),
-            clean: UI.sanitizeWord(w)
-          }));
-        }
-
-        const titleVal = document.getElementById('game-title').value.trim() || "Meu Caça-Palavras";
-        const descVal = document.getElementById('game-subtitle').value.trim() || "Encontre as palavras escondidas!";
-        document.getElementById('header-title').textContent = titleVal;
-        document.getElementById('header-desc').textContent = descVal;
-
-        // Gerar metadados congelados deste momento (utilizado no PDF e rodapés)
-        const now = new Date();
-        const pad = n => n.toString().padStart(2, '0');
-        generationMeta = {
-          dateBR: `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`,
-          dateISO: `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`,
-          host: window.location.hostname || 'localhost'
-        };
-        const footerText = `Gerado em: ${generationMeta.dateBR} | Origem: ${generationMeta.host}`;
-        document.getElementById('footer-watermark').textContent = footerText;
-
-        if (!gameInstance) gameInstance = new WordSearchGame();
-        
-        try {
-          gameInstance.start(wordsList, selectedSize);
-          document.getElementById('setup-screen').classList.add('hidden');
-          document.getElementById('game-screen').classList.remove('hidden');
-        } catch (e) {
-          UI.showError(e.message);
-        }
-      });
-
-      const returnToSetup = () => {
-        if(gameInstance) gameInstance.timerMgr.stop();
-        document.getElementById('game-screen').classList.add('hidden');
-        document.getElementById('win-modal').classList.remove('active');
-        document.getElementById('setup-screen').classList.remove('hidden');
-      };
-
-      document.getElementById('btn-edit').addEventListener('click', returnToSetup);
-      document.getElementById('btn-new-game-modal').addEventListener('click', returnToSetup);
-      document.getElementById('btn-restart').addEventListener('click', () => gameInstance.init());
-      document.getElementById('btn-play-again').addEventListener('click', () => gameInstance.init());
-      document.getElementById('btn-hint').addEventListener('click', () => gameInstance.giveHint());
-      
-      const executePrint = (mode) => {
-        if (mode === 'answer') {
-          document.body.classList.add('print-answer');
-          if (gameInstance) gameInstance.drawAllAnswers();
-        } else {
-          document.body.classList.add('print-normal');
-        }
-        
-        // Um pequeno delay garante que o canvas seja redesenhado e o DOM atualizado 
-        // antes de o navegador "congelar" a tela para a janela de impressão.
-        setTimeout(() => {
-          window.print();
-          document.body.classList.remove('print-normal', 'print-answer');
-          if (gameInstance) gameInstance.redrawFoundLines(); 
-        }, 300);
-      };
-
-      document.getElementById('btn-print').addEventListener('click', () => executePrint('normal'));
-      document.getElementById('btn-print-answers-inline').addEventListener('click', () => executePrint('answer'));
-      document.getElementById('btn-print-answers').addEventListener('click', () => executePrint('answer'));
-
-      const generatePDF = (withAnswerKeyOnly = false) => {
-        if (!window.jspdf || !gameInstance) return alert("Erro ao inicializar biblioteca de PDF.");
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        const title = document.getElementById('header-title').textContent;
-        const subtitle = document.getElementById('header-desc').textContent;
-        const size = gameInstance.gridSize;
-        const cellSize = Math.min(10, 150 / size); 
-        const gridWidth = size * cellSize;
-        const startX = (210 - gridWidth) / 2;
-
-        const addFooter = (currentPage, totalPages) => {
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(9);
-          doc.setTextColor(100, 116, 139);
-          const footerStr = `Gerado em: ${generationMeta.dateBR} | Origem: ${generationMeta.host}`;
-          doc.text(footerStr, 105, 290, { align: "center" });
-          if (totalPages > 1) {
-            doc.text(`Página ${currentPage} de ${totalPages}`, 195, 290, { align: "right" });
-          }
-        };
-
-        const drawPage = (isAnswerKey, pageNum, totalPages) => {
-          let y = 20;
-          doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.setTextColor(124, 45, 18);
-          doc.text(isAnswerKey ? title + " - GABARITO" : title, 105, y, { align: "center" });
-          
-          y += 10;
-          doc.setFont("helvetica", "normal"); doc.setFontSize(12); doc.setTextColor(100, 116, 139);
-          doc.text(subtitle, 105, y, { align: "center" });
-          
-          const startY = y + 15;
-
-          if (isAnswerKey) {
-            doc.setDrawColor(22, 163, 74); 
-            doc.setLineWidth(cellSize * 0.7);
-            doc.setLineCap('round');
-            gameInstance.placedWords.forEach(pw => {
-              const x1 = startX + pw.start.c * cellSize + cellSize / 2;
-              const y1 = startY + pw.start.r * cellSize + cellSize / 2;
-              const x2 = startX + pw.end.c * cellSize + cellSize / 2;
-              const y2 = startY + pw.end.r * cellSize + cellSize / 2;
-              doc.line(x1, y1, x2, y2);
-            });
-          }
-
-          doc.setFont("helvetica", "bold"); doc.setFontSize(cellSize * 1.5);
-          for(let r=0; r<size; r++) {
-            for(let c=0; c<size; c++) {
-              const char = gameInstance.grid[r][c];
-              const xPos = startX + c * cellSize + cellSize / 2;
-              const yPos = startY + r * cellSize + cellSize / 2;
-              doc.setTextColor(0, 0, 0); 
-              doc.text(char, xPos, yPos, { align: 'center', baseline: 'middle' });
-            }
-          }
-
-          if (!isAnswerKey) {
-            y = startY + gridWidth + 20;
-            doc.setFontSize(14); doc.setTextColor(124, 45, 18);
-            doc.text("Palavras para encontrar:", 105, y, { align: "center" });
-            
-            y += 10; doc.setFontSize(11); doc.setTextColor(0, 0, 0);
-            const cols = 3; const colWidth = 180 / cols; let currentX = 15;
-            
-            gameInstance.placedWords.forEach((pw, idx) => {
-              if (idx > 0 && idx % cols === 0) { y += 7; currentX = 15; }
-              doc.text(pw.display, currentX, y);
-              currentX += colWidth;
-            });
-          }
-          
-          addFooter(pageNum, totalPages);
-        };
-
-        let filename = "";
-        
-        if (withAnswerKeyOnly) {
-          drawPage(true, 1, 1);
-          filename = `caca-palavras-${generationMeta.dateISO}-gabarito.pdf`;
-        } else {
-          drawPage(false, 1, 2); // Pagina 1
-          doc.addPage();
-          drawPage(true, 2, 2);  // Pagina 2
-          filename = `caca-palavras-${generationMeta.dateISO}.pdf`;
-        }
-        
-        doc.save(filename);
-      };
-
-      document.getElementById('btn-pdf').addEventListener('click', () => generatePDF(false));
-      document.getElementById('btn-pdf-answers').addEventListener('click', () => generatePDF(true));
-    });
+      if (!t) { try { t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch (e) { t = 'light'; } }
+      d.setAttribute('data-theme', t);
+      m = document.querySelectorAll('meta[name="theme-color"]');
+      for (i = 0; i < m.length; i++) m[i].setAttribute('content', C[t]);
+    })();
   </script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+
+  <!-- Ícones reutilizáveis (inline, sem requisições extras) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-jogo" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+      <symbol id="i-revista" viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11M9 8h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-pagina" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-ajuda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+      <symbol id="i-creditos" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+      <symbol id="i-lua" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-som" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-mudo" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM22 9l-6 6M16 9l6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-seta" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="topo">
+    <div class="topo-in">
+      <img class="marca-logo" src="assets/icons/favicon.svg" width="40" height="40" alt="">
+      <div class="marca-tx">
+        <h1><a href="#individual">Gerador de <span class="nw">Caça-Palavras</span></a></h1>
+        <p>Crie, jogue, imprima e baixe em PDF</p>
+      </div>
+      <div class="topo-acoes">
+        <button class="btn-icone" id="btn-som" type="button" aria-label="Som de vitória" aria-pressed="true" title="Som de vitória: ligado">
+          <svg class="ic-som-on" aria-hidden="true"><use href="#i-som"/></svg><svg class="ic-som-off" aria-hidden="true"><use href="#i-mudo"/></svg>
+        </button>
+        <button class="btn-icone" id="btn-tema" type="button" aria-label="Modo escuro" aria-pressed="false" title="Alternar modo escuro">
+          <svg class="ic-lua" aria-hidden="true"><use href="#i-lua"/></svg><svg class="ic-sol" aria-hidden="true"><use href="#i-sol"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="abas-barra" aria-label="Seções do gerador">
+    <div class="abas" id="abas">
+      <a class="aba" href="#individual" data-view="individual"><svg aria-hidden="true"><use href="#i-jogo"/></svg><span class="aba-tx">Jogo individual</span></a>
+      <a class="aba" href="#revista" data-view="revista"><svg aria-hidden="true"><use href="#i-revista"/></svg><span class="aba-tx">Gerar revista</span></a>
+      <a class="aba" href="#pagina" data-view="pagina"><svg aria-hidden="true"><use href="#i-pagina"/></svg><span class="aba-tx">Página personalizada</span></a>
+      <a class="aba" href="#ajuda" data-view="ajuda"><svg aria-hidden="true"><use href="#i-ajuda"/></svg><span class="aba-tx">Ajuda</span></a>
+      <a class="aba" href="#creditos" data-view="creditos"><svg aria-hidden="true"><use href="#i-creditos"/></svg><span class="aba-tx">Créditos</span></a>
+    </div>
+  </nav>
+
+  <main class="page" id="conteudo">
+    <noscript><div class="alerta alerta-aviso">Este gerador precisa de JavaScript para funcionar. Ative o JavaScript no navegador para criar e exportar seus caça-palavras.</div></noscript>
+
+    <!-- ============ 1) JOGO INDIVIDUAL ============ -->
+    <section class="view" id="view-individual" aria-labelledby="h-individual">
+      <div id="ind-setup">
+        <div class="view-cab" tabindex="-1"><h2 id="h-individual">Jogo individual</h2><p>Digite as palavras, escolha o tamanho e as direções e jogue na tela, imprima ou salve em PDF.</p></div>
+        <form class="form-col" id="ind-form" novalidate autocomplete="off">
+          <div class="menu-cfg-host" data-cfg="individual"></div>
+          <div id="ind-erros" class="alerta alerta-erro" role="alert" tabindex="-1" hidden></div>
+
+          <details class="secao" open>
+            <summary>Conteúdo do jogo</summary>
+            <div class="secao-corpo">
+              <div class="campo-linha">
+                <div class="campo"><label for="ind-titulo">Título principal</label><input type="text" id="ind-titulo" name="titulo" maxlength="60" placeholder="Ex.: Meu Caça-Palavras"></div>
+                <div class="campo"><label for="ind-id">Identificação do jogo <small class="muted">(opcional)</small></label><input type="text" id="ind-id" name="id" maxlength="24" placeholder="Ex.: P0001"></div>
+              </div>
+              <div class="campo"><label for="ind-subtitulo">Subtítulo</label><input type="text" id="ind-subtitulo" name="subtitulo" maxlength="100" placeholder="Ex.: Encontre as palavras escondidas!"></div>
+              <div class="campo"><label for="ind-instrucoes">Texto de instruções</label><textarea id="ind-instrucoes" name="instrucoes" rows="2" maxlength="300" placeholder="Ex.: As palavras podem estar na horizontal, vertical ou diagonal."></textarea></div>
+            </div>
+          </details>
+
+          <details class="secao" open>
+            <summary>Palavras</summary>
+            <div class="secao-corpo">
+              <div class="seg" role="radiogroup" aria-label="Origem das palavras">
+                <label><input type="radio" name="modo" value="manual" checked><span>Digitar palavras</span></label>
+                <label><input type="radio" name="modo" value="tema"><span>Sortear por tema</span></label>
+              </div>
+              <div id="ind-manual" class="campo campo-palavras">
+                <div class="rotulo-acao"><label for="ind-palavras">Palavras para encontrar</label><button class="btn-texto" type="button" id="ind-exemplo">Inserir exemplo</button></div>
+                <textarea id="ind-palavras" name="palavras" rows="4" spellcheck="false" maxlength="4000" aria-describedby="ind-palavras-dica ind-palavras-estado" placeholder="AMOR, ESPERANÇA, FÉ, SABEDORIA, BONDADE, PACIÊNCIA, JUSTIÇA, PERDÃO, RESPEITO, GRATIDÃO"></textarea>
+                <p class="dica" id="ind-palavras-dica">Separe as palavras por vírgulas. Os acentos aparecem na lista; na matriz as letras ficam sem acento, sem espaços e sem hífens.</p>
+                <div class="estado-palavras" id="ind-palavras-estado" aria-live="polite"></div>
+              </div>
+              <div id="ind-auto" class="campo-linha" hidden>
+                <div class="campo"><label for="ind-tema">Tema</label><select id="ind-tema" name="tema"><option value="">Selecione um tema…</option></select></div>
+                <div class="campo"><label for="ind-qtd">Quantidade de palavras</label><select id="ind-qtd" name="qtd"></select></div>
+              </div>
+            </div>
+          </details>
+
+          <details class="secao" open>
+            <summary>Tamanho da matriz</summary>
+            <div class="secao-corpo"><div data-comp="size"></div></div>
+          </details>
+
+          <details class="secao" open>
+            <summary>Direções das palavras</summary>
+            <div class="secao-corpo"><div data-comp="dirs"></div></div>
+          </details>
+
+          <details class="secao">
+            <summary>Opções <small>lista de palavras</small></summary>
+            <div class="secao-corpo">
+              <label class="chk"><input type="checkbox" name="lista" checked><span>Mostrar a lista de palavras<small>Desmarque para um desafio maior: a lista não aparece no jogo, na impressão nem no PDF.</small></span></label>
+            </div>
+          </details>
+
+          <div class="acoes">
+            <button class="btn btn-primario" type="submit" id="ind-gerar">Gerar caça-palavras</button>
+            <button class="btn" type="button" id="ind-limpar">Limpar formulário</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="ind-jogo" hidden>
+        <div class="jogo-cab">
+          <h2 id="jg-titulo" tabindex="-1"></h2><span class="chip" id="jg-id" hidden></span>
+          <p id="jg-sub"></p>
+          <p class="instr" id="jg-instr" hidden></p>
+        </div>
+        <div class="jogo-layout">
+          <div class="tab-card">
+            <div class="tabuleiro" id="tabuleiro" tabindex="0" role="application" aria-label="Tabuleiro do caça-palavras. Com o mouse ou o dedo, arraste sobre as letras. Com o teclado, use as setas para mover, Espaço para marcar o início e o fim da palavra e Esc para cancelar.">
+              <canvas id="cv-grade"></canvas><canvas id="cv-linhas"></canvas><canvas id="cv-arrasto"></canvas>
+            </div>
+          </div>
+          <aside class="lateral" aria-label="Painel do jogo">
+            <div class="painel painel-jogo">
+              <div class="status"><div><b id="jg-tempo">00:00</b><span>Tempo</span></div><div><b id="jg-achadas">0/0</b><span>Encontradas</span></div></div>
+              <div class="grade-btns">
+                <button class="btn btn-sm" type="button" id="jg-dica">Revelar palavra</button>
+                <button class="btn btn-sm" type="button" id="jg-embaralhar">Embaralhar</button>
+                <button class="btn btn-sm btn-largo" type="button" id="jg-gabarito" aria-pressed="false">Mostrar gabarito</button>
+                <button class="btn btn-sm" type="button" id="jg-imprimir">Imprimir</button>
+                <button class="btn btn-sm" type="button" id="jg-imprimir-gab">Imprimir gabarito</button>
+                <button class="btn btn-sm" type="button" id="jg-pdf">Salvar PDF</button>
+                <button class="btn btn-sm" type="button" id="jg-pdf-gab">PDF do gabarito</button>
+                <button class="btn btn-sm btn-largo btn-ghost" type="button" id="jg-editar">Editar jogo</button>
+              </div>
+            </div>
+            <div class="painel lista-card" id="jg-lista-card">
+              <h3>Encontrar <span>(<span id="jg-cont">0</span>/<span id="jg-total">0</span>)</span></h3>
+              <ul class="lista-palavras" id="jg-lista" aria-label="Lista de palavras a encontrar"></ul>
+              <p class="lista-nota">A lista de palavras está oculta neste desafio.</p>
+            </div>
+          </aside>
+        </div>
+        <p class="print-only" id="jg-marca"></p>
+        <div class="sr-only" id="jg-live" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ============ 2) GERAR REVISTA ============ -->
+    <section class="view" id="view-revista" aria-labelledby="h-revista">
+      <div class="view-cab" tabindex="-1"><h2 id="h-revista">Gerar revista de passatempo</h2><p>Crie até 50 caça-palavras diferentes em um único PDF A4: uma atividade por página e todos os gabaritos no final, quatro por página.</p></div>
+      <form class="form-col" id="rev-form" novalidate autocomplete="off">
+        <div class="menu-cfg-host" data-cfg="revista"></div>
+        <div id="rev-erros" class="alerta alerta-erro" role="alert" tabindex="-1" hidden></div>
+
+        <details class="secao" open>
+          <summary>Revista</summary>
+          <div class="secao-corpo">
+            <div class="campo"><label for="rev-titulo">Título da revista</label><input type="text" id="rev-titulo" name="titulo" maxlength="60" placeholder="Ex.: Revista de Passatempo"></div>
+            <div class="campo"><label for="rev-subtitulo">Subtítulo</label><input type="text" id="rev-subtitulo" name="subtitulo" maxlength="100" placeholder="Ex.: Encontre todas as palavras e divirta-se!"></div>
+            <div class="campo-linha">
+              <div class="campo"><label for="rev-quantidade">Quantidade de caça-palavras <small class="muted">(1 a 50)</small></label><input type="number" id="rev-quantidade" name="quantidade" min="1" max="50" step="1" value="10" inputmode="numeric"></div>
+              <div class="campo"><label for="rev-porjogo">Palavras por caça-palavras</label><input type="number" id="rev-porjogo" name="porjogo" min="3" max="40" step="1" value="12" inputmode="numeric"></div>
+              <div class="campo"><label for="rev-id">Identificação inicial</label><input type="text" id="rev-id" name="id" maxlength="24" value="P0001" placeholder="Ex.: P0001, #001, JOGO001"></div>
+            </div>
+            <p class="dica">A identificação aumenta sozinha no número final e mantém os zeros: P0001, P0002, P0003… Sem número no final, o sistema acrescenta um sufixo (ATIVIDADE-01, ATIVIDADE-02…).</p>
+            <div class="campo"><label for="rev-instrucoes">Instrução exibida em cada atividade</label><textarea id="rev-instrucoes" name="instrucoes" rows="2" maxlength="300" placeholder="Ex.: Encontre na matriz as palavras da lista. Elas podem estar em várias direções."></textarea></div>
+          </div>
+        </details>
+
+        <details class="secao" open>
+          <summary>Banco de palavras</summary>
+          <div class="secao-corpo">
+            <div class="campo campo-palavras">
+              <label for="rev-banco">Palavras para distribuir entre os jogos</label>
+              <textarea id="rev-banco" name="banco" rows="5" spellcheck="false" maxlength="60000" aria-describedby="rev-banco-dica rev-banco-estado" placeholder="Cole aqui o seu banco de palavras, separadas por vírgulas."></textarea>
+              <p class="dica" id="rev-banco-dica">O sistema sorteia as palavras de cada jogo a partir deste banco. Repetidas e palavras maiores que a matriz são ignoradas.</p>
+              <div class="estado-palavras" id="rev-banco-estado" aria-live="polite"></div>
+            </div>
+            <div class="tema-linha">
+              <div class="campo"><label for="rev-tema">Carregar palavras de um tema</label><select id="rev-tema" name="tema"><option value="">Escolha um tema…</option></select></div>
+              <button class="btn" type="button" id="rev-add-tema">Adicionar ao banco</button>
+            </div>
+            <label class="chk"><input type="checkbox" name="reuso"><span>Permitir reutilizar palavras entre jogos diferentes<small>Desmarcado, cada palavra aparece em um único jogo e o sistema confere antes de gerar se o banco é suficiente.</small></span></label>
+            <div class="resumo-live" id="rev-live" role="status" aria-live="polite"></div>
+          </div>
+        </details>
+
+        <details class="secao" open>
+          <summary>Tamanho da matriz</summary>
+          <div class="secao-corpo"><div data-comp="size"></div></div>
+        </details>
+        <details class="secao" open>
+          <summary>Direções das palavras</summary>
+          <div class="secao-corpo"><div data-comp="dirs"></div></div>
+        </details>
+        <details class="secao">
+          <summary>Opções <small>lista de palavras</small></summary>
+          <div class="secao-corpo"><label class="chk"><input type="checkbox" name="lista" checked><span>Mostrar a lista de palavras em cada atividade<small>Desmarque para um desafio maior.</small></span></label></div>
+        </details>
+
+        <div class="acoes">
+          <button class="btn btn-primario" type="submit" id="rev-gerar">Gerar revista</button>
+          <button class="btn" type="button" id="rev-limpar">Limpar formulário</button>
+        </div>
+
+        <div class="resultado painel" id="rev-resultado" hidden>
+          <h3 id="rev-res-h" tabindex="-1">Revista pronta</h3>
+          <ul class="resumo-lista" id="rev-resumo"></ul>
+          <div class="acoes"><button class="btn btn-primario" type="button" id="rev-baixar">Baixar PDF</button></div>
+          <p class="dica">O nome do arquivo começa com a data e a hora do clique em baixar (AAAAMMDDHHMMSS). O PDF usa exatamente os jogos mostrados aqui.</p>
+          <div class="previa" id="rev-previa"></div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ 3) PÁGINA PERSONALIZADA ============ -->
+    <section class="view" id="view-pagina" aria-labelledby="h-pagina">
+      <div class="view-cab" tabindex="-1"><h2 id="h-pagina">Página de atividade personalizada</h2><p>Monte uma folha A4 horizontal para sala de aula: texto na coluna da esquerda, caça-palavras na coluna da direita e uma segunda página com as respostas.</p></div>
+      <form class="form-col" id="pag-form" novalidate autocomplete="off">
+        <div class="menu-cfg-host" data-cfg="pagina"></div>
+        <div id="pag-erros" class="alerta alerta-erro" role="alert" tabindex="-1" hidden></div>
+
+        <details class="secao" open>
+          <summary>Texto da página</summary>
+          <div class="secao-corpo">
+            <div class="campo-linha">
+              <div class="campo"><label for="pag-titulo">Título principal</label><input type="text" id="pag-titulo" name="titulo" maxlength="80" placeholder="Ex.: Virtudes que Transformam"></div>
+              <div class="campo"><label for="pag-id">Identificação da atividade</label><input type="text" id="pag-id" name="id" maxlength="24" placeholder="Ex.: ATIVIDADE 01"></div>
+            </div>
+            <div class="campo"><label for="pag-subtitulo">Subtítulo</label><input type="text" id="pag-subtitulo" name="subtitulo" maxlength="120" placeholder="Ex.: Atividade de vocabulário — 6º ano"></div>
+            <div class="campo"><label for="pag-texto">Texto personalizado</label><textarea id="pag-texto" name="texto" rows="6" maxlength="3000" placeholder="Escreva o texto da atividade. Use uma linha em branco para separar os parágrafos."></textarea></div>
+            <div class="campo"><label for="pag-instrucoes">Instruções para o participante</label><textarea id="pag-instrucoes" name="instrucoes" rows="2" maxlength="400" placeholder="Ex.: Circule cada palavra com lápis colorido."></textarea></div>
+          </div>
+        </details>
+
+        <details class="secao" open>
+          <summary>Palavras</summary>
+          <div class="secao-corpo">
+            <div class="campo campo-palavras">
+              <div class="rotulo-acao"><label for="pag-palavras">Palavras para encontrar</label><button class="btn-texto" type="button" id="pag-exemplo">Inserir exemplo</button></div>
+              <textarea id="pag-palavras" name="palavras" rows="4" spellcheck="false" maxlength="4000" aria-describedby="pag-palavras-dica pag-palavras-estado" placeholder="AMOR, ESPERANÇA, FÉ, SABEDORIA, BONDADE"></textarea>
+              <p class="dica" id="pag-palavras-dica">Separe as palavras por vírgulas.</p>
+              <div class="estado-palavras" id="pag-palavras-estado" aria-live="polite"></div>
+            </div>
+            <div class="tema-linha">
+              <div class="campo"><label for="pag-tema">Carregar palavras de um tema</label><select id="pag-tema" name="tema"><option value="">Escolha um tema…</option></select></div>
+              <button class="btn" type="button" id="pag-add-tema">Adicionar às palavras</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="secao" open><summary>Tamanho da matriz</summary><div class="secao-corpo"><div data-comp="size"></div></div></details>
+        <details class="secao" open><summary>Direções das palavras</summary><div class="secao-corpo"><div data-comp="dirs"></div></div></details>
+        <details class="secao">
+          <summary>Opções <small>lista de palavras</small></summary>
+          <div class="secao-corpo"><label class="chk"><input type="checkbox" name="lista" checked><span>Mostrar a lista de palavras na coluna da esquerda</span></label></div>
+        </details>
+
+        <div class="acoes">
+          <button class="btn btn-primario" type="submit" id="pag-gerar">Gerar página</button>
+          <button class="btn" type="button" id="pag-limpar">Limpar formulário</button>
+        </div>
+
+        <div class="resultado painel" id="pag-resultado" hidden>
+          <h3 id="pag-res-h" tabindex="-1">Página pronta</h3>
+          <ul class="resumo-lista" id="pag-resumo"></ul>
+          <div class="alerta alerta-aviso" id="pag-ajuste" hidden></div>
+          <div class="acoes"><button class="btn btn-primario" type="button" id="pag-baixar">Baixar PDF</button></div>
+          <p class="dica">O PDF tem duas páginas A4 horizontais: a atividade e as respostas, com a mesma identificação.</p>
+          <div class="previa" id="pag-previa"></div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ 4) AJUDA ============ -->
+    <section class="view" id="view-ajuda" aria-labelledby="h-ajuda">
+      <div class="view-cab" tabindex="-1"><h2 id="h-ajuda">Ajuda e como utilizar</h2><p>Um guia rápido para criar, jogar, imprimir e exportar seus caça-palavras.</p></div>
+      <article class="prose">
+        <h3>O que é o Gerador de Caça-Palavras</h3>
+        <p>É uma ferramenta gratuita que roda no próprio navegador. Você informa as palavras, escolhe o tamanho da matriz e as direções permitidas, e o programa monta o jogo na hora. Dá para jogar na tela, imprimir ou salvar em PDF, com ou sem gabarito. Nada do que você digita é enviado para um servidor: o processamento acontece no seu aparelho.</p>
+        <p>Há três modos de uso: o <a href="#individual">jogo individual</a>, a <a href="#revista">revista de passatempo</a> (vários jogos em um só PDF) e a <a href="#pagina">página personalizada</a>, pensada para atividades de sala de aula.</p>
+
+        <h3>Como criar um caça-palavras personalizado</h3>
+        <ol>
+          <li>Na aba <a href="#individual">Jogo individual</a>, preencha o título e o subtítulo, se quiser.</li>
+          <li>Digite as palavras no campo único, separadas por vírgulas. Exemplo: <em>amor, esperança, fé, sabedoria</em>. Espaços sobrando e itens vazios são ignorados, e palavras repetidas são avisadas, mesmo quando só o acento muda.</li>
+          <li>Escolha o tamanho da matriz e as direções das palavras.</li>
+          <li>Clique em <strong>Gerar caça-palavras</strong>. Na tela, arraste o mouse ou o dedo sobre as letras de uma palavra para marcá-la. Pelo teclado, use as setas e a tecla Espaço.</li>
+          <li>Use <strong>Revelar palavra</strong> para uma dica, <strong>Embaralhar</strong> para criar uma nova matriz com as mesmas palavras e <strong>Mostrar gabarito</strong> para ver todas as respostas.</li>
+        </ol>
+        <p>Prefere não escolher as palavras? Em <em>Sortear por tema</em> o gerador escolhe palavras de temas como Animais, Geografia, Frutas e Vegetais ou Virtudes e Valores.</p>
+
+        <h3>Como escolher o tamanho da matriz</h3>
+        <ul>
+          <li><strong>10 × 10 (pequeno):</strong> bom para crianças e atividades rápidas, com poucas palavras curtas.</li>
+          <li><strong>15 × 15 (médio):</strong> o tamanho padrão, equilibrado para a maioria das atividades.</li>
+          <li><strong>20 × 20 (grande):</strong> mais espaço para muitas palavras e para palavras compridas.</li>
+        </ul>
+        <p>A maior palavra precisa caber em uma linha da matriz. Quando isso não acontece, o gerador avisa qual palavra é grande demais, e você pode removê-la com um clique ou escolher um tamanho maior.</p>
+
+        <h3>Como funcionam as direções das palavras</h3>
+        <p>As palavras podem ser escondidas em oito direções: horizontal para a direita e para a esquerda, vertical para baixo e para cima, e as quatro diagonais. Você liga e desliga cada uma delas, ou usa os atalhos <em>Todas</em>, <em>Horizontal</em>, <em>Vertical</em>, <em>Diagonal</em> e <em>Horizontal e vertical</em>.</p>
+        <p>Para quem está começando, direções para a direita e para baixo tornam o jogo mais fácil. Palavras de trás para frente e diagonais aumentam o desafio. O gerador respeita exatamente as direções marcadas.</p>
+
+        <h3>Como gerar revistas de passatempo</h3>
+        <p>Na aba <a href="#revista">Gerar revista</a>, informe um banco de palavras (ou carregue um tema), a quantidade de jogos (de 1 a 50) e quantas palavras cada jogo terá. O sistema sorteia as palavras de cada jogo e monta uma matriz diferente para cada um. Você decide se uma palavra pode aparecer em mais de um jogo; se não puder, o sistema confere antes de começar se o banco tem palavras suficientes e diz quantas faltam.</p>
+        <p>Cada jogo recebe uma identificação própria, como P0001, P0002 e assim por diante, que também aparece no gabarito. No PDF, cada atividade ocupa uma página e todos os gabaritos ficam no final, quatro por página, com a página da atividade correspondente indicada.</p>
+
+        <h3>Como montar uma página de atividade</h3>
+        <p>Na aba <a href="#pagina">Página personalizada</a>, escreva um título, um texto com quantos parágrafos quiser, as instruções e as palavras. O resultado é uma folha A4 na horizontal: texto e lista de palavras à esquerda, matriz à direita, mais uma segunda folha com as respostas. Se o texto for longo demais para a coluna, o gerador avisa antes de exportar, em vez de cortar o conteúdo.</p>
+
+        <h3>Como exportar atividades em PDF</h3>
+        <ul>
+          <li><strong>Jogo individual:</strong> o PDF tem a atividade e o gabarito em páginas A4 na vertical.</li>
+          <li><strong>Revista:</strong> A4 na vertical, com as atividades primeiro e os gabaritos depois.</li>
+          <li><strong>Página personalizada:</strong> A4 na horizontal, com o texto à esquerda e a matriz à direita, mais uma página de respostas.</li>
+        </ul>
+        <p>O nome de cada arquivo começa com a data e a hora do clique em baixar, no formato AAAAMMDDHHMMSS (por exemplo, <em>20261104101435-revista-caca-palavras.pdf</em>). Para imprimir, abra o PDF e escolha o tamanho real (100%), sem ajuste de escala.</p>
+
+        <h3>Perguntas frequentes</h3>
+        <div class="faq">
+          <details><summary>O gerador é gratuito?</summary><div><p>Sim. Não há cadastro, assinatura nem limite de uso.</p></div></details>
+          <details><summary>Meus dados são enviados para algum servidor?</summary><div><p>Não. Tudo é processado no seu navegador. As configurações que você salvar ficam apenas no armazenamento local do seu aparelho.</p></div></details>
+          <details><summary>Posso usar palavras com acento, espaço ou hífen?</summary><div><p>Sim. A lista mantém a palavra como você digitou. Dentro da matriz, as letras ficam sem acento, e espaços e hífens são removidos: “Pica-pau” entra na matriz como PICAPAU.</p></div></details>
+          <details><summary>Qual é o tamanho máximo de uma palavra?</summary><div><p>O mesmo da matriz: 10, 15 ou 20 letras, conforme o tamanho escolhido. A palavra mínima tem 2 letras.</p></div></details>
+          <details><summary>Quantos caça-palavras posso gerar de uma vez?</summary><div><p>Na aba Gerar revista, de 1 a 50 em um único PDF. A barra de progresso mostra o andamento e você pode cancelar.</p></div></details>
+          <details><summary>O que acontece se as palavras não couberem na matriz?</summary><div><p>O gerador nunca entrega um jogo incompleto. Se não conseguir posicionar todas as palavras, mostra uma mensagem com sugestões: usar uma matriz maior, reduzir as palavras ou ativar mais direções.</p></div></details>
+          <details><summary>Por que o nome do PDF começa com números?</summary><div><p>São a data e a hora exatas do clique em baixar (ano, mês, dia, hora, minuto e segundo, sem separadores). Assim os arquivos ficam em ordem cronológica e nunca se sobrepõem.</p></div></details>
+          <details><summary>Funciona no celular e no tablet?</summary><div><p>Sim. O layout se adapta a telas pequenas e o jogo aceita toque. Em celulares, o PDF é baixado e pode ser aberto no leitor do aparelho.</p></div></details>
+          <details><summary>O jogo tem efeito e som de vitória?</summary><div><p>Sim. Ao encontrar a última palavra, a matriz ganha uma animação de comemoração e toca um toque curto de vitória. O botão com o alto-falante, no topo da página, liga ou desliga o som, e a escolha fica salva no navegador. Quem ativa “reduzir movimento” no sistema não vê as animações. No iPhone, o modo silencioso do aparelho também silencia o toque.</p></div></details>
+          <details><summary>Posso salvar minhas configurações?</summary><div><p>Sim. No menu <em>Configurações</em> de cada formulário é possível salvar no navegador, exportar para um arquivo JSON, importar de volta e consultar as últimas configurações usadas.</p></div></details>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ 5) CRÉDITOS ============ -->
+    <section class="view" id="view-creditos" aria-labelledby="h-creditos">
+      <div class="view-cab" tabindex="-1"><h2 id="h-creditos">Créditos</h2></div>
+      <div class="painel credito">
+        <img class="marca-logo" src="assets/icons/brand-symbol.svg" width="80" height="80" alt="">
+        <p class="autor">Desenvolvido por Eliseu Fernandes Laurindo.</p>
+        <p>Gerador de Caça-Palavras é uma ferramenta digital desenvolvida para a criação, personalização e impressão de atividades educativas e recreativas.</p>
+        <div class="links">
+          <a class="btn btn-primario" href="https://eliseuangelos.github.io" target="_blank" rel="noopener">Site pessoal</a>
+          <a class="btn" href="https://github.com/eliseuangelos/caca-palavras" target="_blank" rel="noopener">Repositório do projeto</a>
+        </div>
+        <p class="dica">Os PDFs são criados com a biblioteca jsPDF (licença MIT).</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p>Desenvolvido por Eliseu Fernandes Laurindo · <a href="https://eliseuangelos.github.io" target="_blank" rel="noopener">Site pessoal</a> · <a href="https://github.com/eliseuangelos/caca-palavras" target="_blank" rel="noopener">Repositório</a> · <a href="#ajuda">Ajuda</a></p>
+    <p>Seus dados ficam no seu navegador. Nada é enviado para servidores.</p>
+  </footer>
+
+  <!-- Diálogos -->
+  <dialog class="dlg" id="dlg-vitoria" aria-labelledby="vit-titulo">
+    <svg class="vit-selo" viewBox="0 0 72 72" aria-hidden="true" focusable="false"><circle cx="36" cy="36" r="31"/><path d="M22 37.5l10 10 18-21"/></svg>
+    <h2 id="vit-titulo">Parabéns!</h2>
+    <p>Você encontrou todas as palavras<span id="vit-tempo"></span>.</p>
+    <div class="dlg-acoes">
+      <button class="btn btn-primario" type="button" id="vit-gab">Imprimir gabarito</button>
+      <button class="btn" type="button" id="vit-pdf">Salvar PDF (gabarito)</button>
+      <div class="par"><button class="btn" type="button" id="vit-embaralhar">Embaralhar novo</button><button class="btn" type="button" id="vit-novo">Criar novo</button></div>
+      <button class="btn btn-ghost" type="button" id="vit-fechar">Continuar vendo</button>
+    </div>
+  </dialog>
+  <dialog class="dlg" id="dlg-progresso" aria-labelledby="pg-titulo">
+    <h2 id="pg-titulo">Trabalhando…</h2>
+    <p id="pg-texto" aria-live="polite">Preparando…</p>
+    <progress id="pg-barra" max="100" value="0"></progress>
+    <div class="dlg-acoes"><button class="btn" type="button" id="pg-cancelar">Cancelar</button></div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="confete" id="confete" aria-hidden="true"></div>
+
+  <script src="assets/js/metrics.js" defer></script>
+  <script src="assets/js/themes.js" defer></script>
+  <script src="assets/js/core.js" defer></script>
+  <script src="assets/js/sheets.js" defer></script>
+  <script src="assets/js/pdf.js" defer></script>
+  <script src="assets/js/game.js" defer></script>
+  <script src="assets/js/app-core.js" defer></script>
+  <script src="assets/js/efeitos.js" defer></script>
+  <script src="assets/js/app-views.js" defer></script>
 </body>
 </html>

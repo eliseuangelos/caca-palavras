@@ -1,0 +1,11 @@
+# robots.txt do Gerador de Caça-Palavras
+#
+# ATENÇÃO: os buscadores só leem o robots.txt na RAIZ do domínio (https://eliseuangelos.github.io/robots.txt).
+# Um arquivo dentro de /caca-palavras/ é ignorado por eles. Este arquivo existe como referência e para quem
+# publicar o projeto em um domínio próprio. Sem nenhum robots.txt, o GitHub Pages permite o rastreamento de tudo.
+# Veja a seção "robots.txt e o endereço do GitHub Pages" no README.md.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://eliseuangelos.github.io/caca-palavras/sitemap.xml
