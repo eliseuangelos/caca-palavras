@@ -1,13 +1,18 @@
 # Gerador de Caça-Palavras
 
 <p align="center">
-  <a href="https://eliseuangelos.github.io/caca-palavras/">🌐 ACESSAR O PROJETO</a>
-  &nbsp;•&nbsp;
-  <a href="https://eliseuangelos.github.io/">SITE PESSOAL</a>
-  &nbsp;•&nbsp;
-  <a href="https://github.com/eliseuangelos">GITHUB</a>
-  &nbsp;•&nbsp;
-  <a href="https://linkedin.com/in/eliseu-fernandes-laurindo">LINKEDIN</a>
+  <a href="https://eliseuangelos.github.io/caca-palavras/" target="_blank">
+    <img src="https://img.shields.io/badge/ACESSAR_PROJETO-00D9FF?style=for-the-badge&logo=googlechrome&logoColor=050505" alt="Acessar o Projeto">
+  </a>
+  <a href="https://eliseuangelos.github.io/" target="_blank">
+    <img src="https://img.shields.io/badge/SITE_PESSOAL-111827?style=for-the-badge&logo=googlechrome&logoColor=00D9FF" alt="Site Pessoal">
+  </a>
+  <a href="https://github.com/eliseuangelos" target="_blank">
+    <img src="https://img.shields.io/badge/GITHUB-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+  </a>
+  <a href="https://linkedin.com/in/eliseu-fernandes-laurindo" target="_blank">
+    <img src="https://img.shields.io/badge/LINKEDIN-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+  </a>
 </p>
 
 <p align="center"><strong>Criação de jogos de palavras, atividades educativas e materiais prontos para impressão.</strong></p>
