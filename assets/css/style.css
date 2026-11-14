@@ -84,9 +84,9 @@ html.no-tr *, html.no-tr *::before, html.no-tr *::after { transition: none !impo
 .btn-icone { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-primary); cursor: pointer; transition: border-color var(--t-fast), color var(--t-fast), transform var(--t-fast), background var(--t-fast); }
 .btn-icone:hover { border-color: var(--color-accent); color: var(--color-accent); transform: translateY(-1px); }
 .btn-icone svg { width: 20px; height: 20px; }
-.ic-sol, .ic-som-on { display: none; }
-[data-theme="dark"] .ic-sol { display: block; }
-[data-theme="dark"] .ic-lua { display: none; }
+.ic-lua, .ic-som-on { display: none; }
+[data-theme="dark"] .ic-sol { display: none; }
+[data-theme="dark"] .ic-lua { display: block; }
 #btn-som[aria-pressed="true"] .ic-som-on { display: block; }
 #btn-som[aria-pressed="true"] .ic-som-off { display: none; }
 
